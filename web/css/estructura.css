@@ -1,0 +1,235 @@
+
+/*Elementos principales de la pagina*/
+html, body, form, p {
+margin:0px;	padding:0px;
+}
+body {
+text-align:center; /*center hack*/
+background-color:#FFFFFF;
+color:#000000;
+font-family: "Trebuchet MS", Tahoma,Verdana,Arial !important;
+font-size: 12px;	
+}	
+img,table {
+border:none;
+}
+
+h1,h2,h3,h4,h5,h6{margin:0; padding:0; display:block}
+
+#contenedor{
+	width:766px; /*center hack*/
+	margin:0 auto; /*center hack*/
+	text-align:left;
+}
+#pagina {
+	font-size: 11px;text-align: left;
+	width: 766px;min-width : 766px;max-width : 766px;
+	position: relative;
+	margin:0 auto;
+}
+#contenido{
+	display:block;
+	width: 748px;
+	float:left;
+	background-color:#F1F1F1 !important;
+	padding:9px;
+}
+/*Estilos para el encabezado*/
+#cabecera{
+width:inherit;height:50px;padding:15px 0px 0px 0px; display:block
+}
+#cabecera a{
+float:left;width:222px;height:34px;
+background-image:url(../images/logo.jpg);
+}
+.buscador{float:right; padding:4px 0 0 0; display:block; }
+.buscador a{ background-image:none !important; float:left; margin-left:10px; width:auto !important}
+.buscador input{ float:left}
+.buscador input.txt_general_nota{margin:2px 2px 0 0; width:181px; height:15px; border:solid 1px #B9B9B9}
+
+.seccion_amarilla{
+	padding-left:65px; padding-bottom:2px; height:12px; width:150px
+}
+.seccion_amarilla a {height:10px !important;}
+
+/*Fin*/
+
+/*Clases para las barras de menus: principal y sub seccion*/
+#menuSubSeccionH, #menuSubSeccionN, #menuSubSeccionE{background-color:#F1F1F1 !important;  height:27px; float:left}
+#menuSubSeccionH{ width:766px !important;}
+#menuSubSeccionN{padding: 0 0 0 106px; width:660px !important}
+#menuSubSeccionE{padding: 0 0 0 225px; width:540px !important}
+.menuPrincipal, .menuSubSeccion {float:left;padding:0;list-style:none;height:26px;}
+.menuPrincipal li, .menuSubSeccion li {float:left;}
+.menuPrincipal li a, .menuSubSeccion li a {display:block; float:left; height:26px; line-height:26px; text-align:center;text-decoration:inherit;}
+.menuPrincipal li a{padding:0 36px 0 35px; font-size:13px}
+.menuPrincipal {margin:0;width:765px !important; background-color:#051642;}
+.menuPrincipal li a.lnk_botonhedsel{ color:#0099FF;background:#FFFFFF;border-left:1px solid #CCCCCC;border-right:1px solid #CCCCCC; border-top:1px solid #CCCCCC;}
+.menuSubSeccion {margin:0;background-color:#FFFFFF; width:538px; border-left:1px solid #CCCCCC;border-right:1px solid #CCCCCC; border-bottom:1px solid #CCCCCC;}
+.menuSubSeccion li a {padding:0 43px 0 43px;}
+.menuSubSeccionN li a {padding:0 29px 0 29px;}
+.menuSubSeccionE li a {padding:0 43px 0 43px;}
+/*Fin*/
+
+/*Clase para la barra de menu pie de pagina*/
+.menuPie {float:left;margin:10px 0 0 0; padding:0;background-color:inherit; width:748px;}
+#pie p{text-align:right;height:40px; line-height:30px; width:766px !important;}
+.menuPie ul{ float:left; margin:0 0 5px 0; padding:0; width:100%}
+.menuPie li {float:left; list-style:none;line-height:10px;height:10px;}
+.menuPie li a {display:block; float:left; text-align:center; padding:0 10px 0 10px;}
+.separador{ width:1px; background-color:#999999; height:10px}
+/*Fin*/
+
+
+
+.verifica{height:108px; width:248px;margin:5px 0 0 5px;padding-top:10px; background-image:url(../hogar/images/backverifica1.jpg)!important; background-repeat:no-repeat}
+.verifica p{ padding:8px;}
+
+/*filaImagen se utiliza cuando se tiene un recuadro con una imagen en la esquina superior izquierda*/
+.filaImagen{width:748px; height:144px; border-bottom:1px solid #CCCCCC;margin:-10px -9px -9px -9px;}
+.filaImagen img{float:left;padding:0; margin:0}
+.filaImagen div.centroTitulo{float:left; width:295px; margin:0;}
+.filaImagen div.centroTitulo img{display:block; float:left;margin:10px 0 10px 0}
+.filaImagen div.centroTitulo div.contenidoTit{float:left; width:290px; height:75px;}
+.filaImagen div.centroTitulo div.contenidoTit img{float:left; display:block; margin:0; padding:0}
+.filaImagen div.centroTitulo div.contenidoTit span.txt_boton_azul, div.contenidoTit span.tit_azul_gde{line-height:46px; float:left}
+
+#precio{float: right; text-align:center; padding:2px 0 0 5px; height:73px; width:65px}
+#precio span.tit_precio{line-height:30px}
+
+#contrata{float:left; width:175px;margin:9px 0 9px 5px; padding:9px 9px 7px 20px; border-left:1px solid #CAD1D7; height:110px}
+/*Recuadro general*/
+/* Este es el contenedor al que le pondremos bordes redondos */
+div.recuadro{
+   height:auto;
+   background:#FFFFFF;
+   text-align:left !important;
+}
+/* En este contenedor va el contenido que se visualiza en el recuadro */
+div.contenidoRecuadro{ 
+   margin:0;
+   padding:10px 9px 9px 9px;
+   /*padding:2px 9px 3px 9px;*/
+   line-height:15px;
+}
+/* Bordes redondeados de los recuadros */
+span.top, span.bottom{
+   width:100%;
+   height:6px; 
+   display:block;
+   float:left;
+}
+/*Esquinas izquierdas, superior e inferior*/
+span.top {
+   background:url(../images/images_css/esquinasupizq.gif) top left no-repeat; 
+}
+span.bottom{
+   background:url(../images/images_css/esquinainfizq.gif) bottom left no-repeat;
+}
+span.top span, span.bottom span, span.topEsqSup{
+   width:6px; 
+   height:6px;
+   float:right;   
+   font-size:6px; 
+
+}
+/*Esquinas derechas, superior e inferior*/
+span.top span, span.topEsqSup{
+   background:url(../images/images_css/esquinasupder.gif) top right no-repeat;
+}
+span.bottom span{
+   background:url(../images/images_css/esquinainfder.gif) bottom right no-repeat;
+}
+
+div.contenidoRecuadro a.lnk_formas{line-height:18px !important;}
+div.contenidoRecuadro input.frm_bot_naranja{ margin-top:-4px}
+div.contenidoRecuadro  div input.frm_bot_naranja {margin-top:-5px; margin-left:5px}
+ 
+div.contenidoRecuadro h2 { padding-bottom:5px}
+
+/*Estilo general para las tablaa*/
+table{font-size:12px;border-collapse: collapse;}
+td{vertical-align:middle} /*Las celdas de tabla tienen como predeterminado valign:middle*/
+td.celda-home{vertical-align:top !important;} /*celdas <td > donde se requiere el alineado vertical en top.*/
+
+table.tablaGris, table.tablaGris td ,table.tablaAzul, table.tablaAzul td{margin:0;  padding:0} 
+
+/*Estilo para la tabla que contiene encabezado y bordes inferiores redondeados color gris*/
+table.tablaGris{background-color:#F5F5F5; float:left;}
+table.tablaGris td{border-bottom: solid 1px #FFFFFF;}
+table.tablaGris td.encabezadoGris{background-image:url(../images/images_css/titletablegrey1.gif); }
+table.tablaGris td.bordeIzq{background:url(../images/images_css/linebackleftgrey.gif) left repeat-y;}
+table.tablaGris td.bordeDer{background:url(../images/images_css/linebackrigthgrey.gif) right repeat-y;}
+table.tablaGris td.abajoIzq{background:url(../images/images_css/esquinainfizqgrey.gif) left no-repeat; width:9px; height:9px;}
+table.tablaGris td.abajoCentro{background:url(../images/images_css/linebackinfgrey.gif) bottom repeat-x; height:9px; }
+table.tablaGris td.abajoDer{background:url(../images/images_css/esquinainfdergrey.gif) right no-repeat; width:9px; height:9px;}
+table.tablaGris td.encabezadoGris,table.tablaGris td.bordeIzq,table.tablaGris td.bordeDer,table.tablaGris td.abajoIzq,table.tablaGris td.abajoCentro,table.tablaGris td.abajoDer{border-bottom: none}
+
+/*Estilo para la tabla que contiene encabezado azul y bordes redondeados color gris mas claro*/
+table.tablaAzul{background-color:#FFFFFF; float:left;}
+table.tablaAzul td{border-bottom: solid 1px #F5F5F5;}
+table.tablaAzul td.encabezadoAzul{background-image:url(../images/images_css/titletable1.gif); }
+table.tablaAzul td.bordeIzq{background:url(../images/images_css/linebackleft1.gif) left repeat-y;}
+table.tablaAzul td.bordeDer{background:url(../images/images_css/linebackrigth1.gif) right repeat-y;}
+table.tablaAzul td.abajoIzq{background:url(../images/images_css/esquinainfizq1.gif) left no-repeat; width:9px; height:9px;}
+table.tablaAzul td.abajoCentro{background:url(../images/images_css/linebackrinf1.gif) bottom repeat-x; height:9px; }
+table.tablaAzul td.abajoDer{background:url(../images/images_css/esquinainfder1.gif) right no-repeat; width:9px; height:9px;}
+table.tablaAzul td.encabezadoAzul,table.tablaAzul td.bordeIzq,table.tablaAzul td.bordeDer,table.tablaAzul td.abajoIzq,table.tablaAzul td.abajoCentro,table.tablaAzul td.abajoDer{border-bottom: none}
+
+/*Estilo para la tabla que contiene encabezado azul y bordes redondeados color gris mas claro,  con n-columnas*/
+table.tablaNColumAzul{text-align:center}
+table.tablaNColumAzul td{border-bottom:solid 1px #CCCCCC; border-right:solid 1px #CCCCCC;}
+table.tablaNColumAzul td.arribaIzq{background:url(../images/images_css/esq_izqAzul.gif) right no-repeat; width:9px; height:40px;border-right: none}
+table.tablaNColumAzul td.arribaCentro{background-color:#1E6BB1;border-right:solid 1px #FFFFFF;height:40px;}
+table.tablaNColumAzul td.arribaDer{background:url(../images/images_css/esq_derAzul.gif) left no-repeat; width:9px; height:40px;border-right: none}
+table.tablaAzul td.encabezadoAzul,table.tablaAzul td.bordeIzq,table.tablaAzul td.bordeDer,table.tablaAzul td.abajoIzq,table.tablaAzul td.abajoDer,table.tablaNColumAzul td.ultimaCelda{border-right: none}
+table.tablaNColumAzul td.ultimaFila{ border-bottom:none}
+
+/*Tabla gris claro completa*/
+table.tablaGrisClaro{text-align:center; background-color:#F3F3F3}
+table.tablaGrisClaro td.arribaIzq{background:url(../images/images_css/esqGrisClaro_izqArr.gif) left no-repeat; width:11px; height:11px}
+table.tablaGrisClaro td.arribaDer{background:url(../images/images_css/esqGrisClaro_derArr.gif) right no-repeat; width:11px; height:11px}
+table.tablaGrisClaro td.abajoIzq{background:url(../images/images_css/esqGrisClaro_izqAb.gif) left no-repeat; width:11px; height:10px}
+table.tablaGrisClaro td.abajoDer{background:url(../images/images_css/esqGrisClaro_derAb.gif) right no-repeat; width:11px; height:10px}
+
+
+.bordeInferior{border-bottom:solid 1px #FFFFFF !important} /*clase para agregar borde blanco a las celdas*/
+.sinbordeInferior{border-bottom:none !important} /*clase para quitar el borde inferior de alguna celda o fila*/
+/*Tabla gris fuerte completa*/
+table.tablaGrisFuerte{text-align:center; background-color:#E7E7E7}
+table.tablaGrisFuerte td.arribaIzq{background:url(../images/images_css/esqGrisFte_izqArr.gif) left no-repeat; width:11px; height:11px}
+table.tablaGrisFuerte td.arribaDer{background:url(../images/images_css/esqGrisFte_derArr.gif) right no-repeat; width:11px; height:11px}
+table.tablaGrisFuerte td.abajoIzq{background:url(../images/images_css/esqGrisFte_izqAb.gif) left no-repeat; width:11px; height:10px}
+table.tablaGrisFuerte td.abajoDer{background:url(../images/images_css/esqGrisFte_derAb.gif) right no-repeat; width:11px; height:10px}
+
+/*Tabla para buscadores y log in*/
+table.tablaBordegris{text-align:right; background-color:#FFFFFF}
+table.tablaBordegris td.arribaIzq{background:url(../images/images_css/esquinasupizq1.gif) right no-repeat; width:9px; height:9px}
+table.tablaBordegris td.arribaDer{background:url(../images/images_css/esquinasupder1.gif) left no-repeat; width:9px; height:9px}
+table.tablaBordegris td.bordeIzq{background:url(../images/images_css/linebackleft1.gif) right repeat-y;}
+table.tablaBordegris td.bordeDer{background:url(../images/images_css/linebackrigth1.gif) left repeat-y;}
+table.tablaBordegris td.arribaCentro{background:url(../images/images_css/linebacksup.gif) bottom repeat-x; height:9px; }
+table.tablaBordegris td.abajoCentro{background:url(../images/images_css/linebackinf.gif) bottom repeat-x; height:9px; }
+table.tablaBordegris td.abajoIzq{background:url(../images/images_css/esquinainfizq1.gif) right no-repeat; width:9px; height:9px}
+table.tablaBordegris td.abajoDer{background:url(../images/images_css/esquinainfder1.gif) left no-repeat; width:9px; height:9px}
+
+/*clases adicionales para determinar de manera dinamica el alto de los encabezados de color( azul o gris)*/
+.dinamicoAzul td.arribaIzq{background:url(../images/images_css/az_izq_arr.gif) right no-repeat; width:9px; height:9px;border: none}
+.dinamicoAzul .arribaCentro{background-color:#1E6BB1 ; border:none !important; text-align:center}
+.dinamicoAzul td.arribaDer{background:url(../images/images_css/az_der_arr.gif) left no-repeat; width:9px; height:9px;border: none}
+
+.dinamicoGris td.arribaIzq{background:url(../images/images_css/gris_izq_arr.gif) right no-repeat; width:9px; height:9px;border: none}
+.dinamicoGris .arribaCentro{background-color:#c3cbd2; border:none !important; text-align:center}
+.dinamicoGris td.arribaDer{background:url(../images/images_css/gris_der_arr.gif) left no-repeat; width:9px; height:9px;border: none;}
+
+/*Tabla con borde gris #E0DEDE y background #F1F1F1*/
+table.tablaBordegris2{text-align:left; background-color:#FFFFFF}
+table.tablaBordegris2 img{ margin:5px 0; display:block}
+table.tablaBordegris2 td.arribaIzq{background:url(../images/images_css/esq_izq_arriba.gif) left no-repeat; width:7px; height:9px}
+table.tablaBordegris2 td.arribaDer{background:url(../images/images_css/esq_der_arriba.gif) right no-repeat; width:7px; height:9px}
+table.tablaBordegris2 td.bordeIzq{background:url(../images/images_css/bord_izq.gif) left repeat-y; width:7px }
+table.tablaBordegris2 td.bordeDer{background:url(../images/images_css/bord_der.gif) right repeat-y; width:7px}
+table.tablaBordegris2 td.arribaCentro{background:url(../images/images_css/bord_arriba.gif) left repeat-x; height:9px}
+table.tablaBordegris2 td.abajoCentro{background:url(../images/images_css/bord_bajo.gif) bottom repeat-x; height:9px}
+table.tablaBordegris2 td.abajoIzq{background:url(../images/images_css/esq_izq_abajo.gif) left no-repeat; width:7px; height:9px}
+table.tablaBordegris2 td.abajoDer{background:url(../images/images_css/esq_der_abajo.gif) right no-repeat; width:7px; height:9px}
