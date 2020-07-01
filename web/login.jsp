@@ -7,8 +7,8 @@
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-                <link href="../css/estilos.css" rel="stylesheet" type="text/css"/>
-                <link href="../css/estructura.css" rel="stylesheet" type="text/css"/>
+                <link href="css/estilos.css" rel="stylesheet" type="text/css"/>
+                <link href="css/estructura.css" rel="stylesheet" type="text/css"/>
                 <title>Administrador Pago Line</title>
             </head>
             <body>
@@ -20,7 +20,7 @@
         <table width="766" height="64" border="0" align="left" cellpadding="0" cellspacing="0" >
             <tr>
                 <td height="28">
-                    <a href="http://www.telmex.com/mx/" target="blank"><img src="../images/_logo_tmx2.gif" width="177" height="40" border="0" /></a>
+                    <a href="http://www.telmex.com/mx/" target="blank"><img src="images/_logo_tmx2.gif" width="177" height="40" border="0" /></a>
                 </td>
             </tr>
         </table>

@@ -5,13 +5,14 @@
 
 package com.blitz.adminpago.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author pgrande
  */
-public class ComercioDTO {
+public class ComercioDTO implements Serializable{
 
     private String idComercio;
     private String cveComercio;

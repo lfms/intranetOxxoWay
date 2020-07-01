@@ -5,13 +5,14 @@
 
 package com.blitz.adminpago.dto;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  *
  * @author EHJIMENE
  */
-public class ListaPerfilDTO {
+public class ListaPerfilDTO implements Serializable{
     
     private Map listaPerfil;
 

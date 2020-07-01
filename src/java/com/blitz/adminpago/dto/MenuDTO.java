@@ -5,13 +5,14 @@
 
 package com.blitz.adminpago.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author pgrande
  */
-public class MenuDTO {
+public class MenuDTO implements Serializable{
 
     private List menu;
   

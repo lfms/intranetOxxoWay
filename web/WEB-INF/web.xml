@@ -11,7 +11,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>*.jspx</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

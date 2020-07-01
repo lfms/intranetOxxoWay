@@ -16,7 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.el.ELContext;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -29,6 +31,8 @@ import jxl.write.*;
  * Metodos para administracion del catalogo de BINES
  * @author PGRANDE
  */
+@ManagedBean(name = "BinesMB")
+@ViewScoped
 public class BinesMB {
 
     @ManagedProperty(value = "#{BinesBO}")

@@ -20,5 +20,15 @@
             <to-view-id>/login.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
+    
+    <navigation-rule>
+        <description>Acceso a pagina de administrador</description>
+        <from-view-id>/login.jsp</from-view-id>
+        <navigation-case>
+            <from-action>#{AccesoUsrMB.validaUsuario}</from-action>
+            <from-outcome>usrvalido</from-outcome>
+            <to-view-id>/blank.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 
 </faces-config>

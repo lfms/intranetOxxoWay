@@ -11,31 +11,63 @@ import com.blitz.adminpago.bo.BinesBO;
 import com.blitz.adminpago.bo.ComercioBO;
 import com.blitz.adminpago.bo.ModuloBO;
 import com.blitz.adminpago.bo.PerfilBO;
-import com.blitz.adminpago.bo.SucursalBO;
 import com.blitz.adminpago.dao.AccesoDAO;
-import com.blitz.adminpago.dao.DaoTest;
+import com.blitz.adminpago.dao.BancoDAO;
+import com.blitz.adminpago.dao.BinesDAO;
+import com.blitz.adminpago.dao.ComercioDAO;
+import com.blitz.adminpago.dao.ModuloDAO;
+import com.blitz.adminpago.dao.PerfilDAO;
+import com.blitz.adminpago.dao.SucursalDAO;
+import com.blitz.adminpago.dto.ListaComercioDTO;
+import com.blitz.adminpago.dto.MenuDTO;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-/**
- *
- * @author Charolastros
- */
 @Configuration
 @PropertySource(value = "/WEB-INF/resource/qa/app.properties")
 public class SpringCoreConfig {
     
-    @Bean
-    public DaoTest daoTest(){
-        return new DaoTest();
-    }
-    
     @Bean 
     public AccesoDAO getAccesoDAO(){
         return new AccesoDAO();
+    }  
+    
+    @Bean
+    public BancoDAO getBancoDAO(){
+        return new BancoDAO();
     }
+    
+    @Bean 
+    public BinesDAO getBinesDAO(){
+        return new BinesDAO();
+    }
+    
+    @Bean
+    public ComercioDAO getComercioDAO(){
+        return new ComercioDAO();
+    }
+    
+    @Bean
+    public ModuloDAO getModuloDAO(){
+        return new ModuloDAO();
+    }
+    
+    @Bean
+    public PerfilDAO getPerfilDAO(){
+        return new PerfilDAO();
+    }  
+    
+    @Bean
+    public SucursalDAO getSucursalDAO(){
+        return new SucursalDAO();
+    }
+    
+    //BO
+    
     @Bean(name = "AccesoBO")
     public AccesoBO getAccesoBO(){
         return new AccesoBO();
@@ -51,11 +83,6 @@ public class SpringCoreConfig {
         return new ComercioBO();
     }
     
-    @Bean(name = "SucursalBO")
-    public SucursalBO getSucursalBO(){
-        return new SucursalBO();
-    }
-    
     @Bean(name = "PerfilBO")
     public PerfilBO getPerfilBO(){
         return new PerfilBO();
@@ -69,6 +96,30 @@ public class SpringCoreConfig {
     @Bean(name = "BinesBO")
     public BinesBO getBinesBO(){
         return new BinesBO();
+    }
+    
+    //DTOs
+    @Bean(name = "MenuDTO")
+    public MenuDTO getMenuDTO(){
+        return new MenuDTO();
+    }
+    
+    @Bean(name = "ListaComercioDTO")
+    public ListaComercioDTO getListaComercioDTO(){
+        return new ListaComercioDTO();
+    }
+    
+    @Bean(name = "estatusPagoMap")
+    public Map getEstatusPagoMap(){
+        Map<String, String> map = new HashMap<>();       
+        map.put("AP - ATENDIDO Y POSTEADO", "AP");
+        map.put("AA - RECIBIDO Y ENVIADO A PISA", "AA");
+        map.put("AS - ENVIADO A PISA SIN SECUENCIA", "AS");
+        map.put("RR - RECIBIDO Y NO ENVIADO A PISA", "RR");
+        map.put("EN - ERROR NO EXISTE FOLIO", "EN");
+        map.put("EE - ERROR NO SE PUDO ENVIAR PAGO", "EE");
+        map.put("CA - CANCELADO", "CA");
+        return map;
     }
     
     @Bean

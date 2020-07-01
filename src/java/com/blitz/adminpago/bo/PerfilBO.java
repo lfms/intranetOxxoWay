@@ -8,6 +8,7 @@ import com.blitz.adminpago.dao.ModuloDAO;
 import com.blitz.adminpago.dao.PerfilDAO;
 import com.blitz.adminpago.dto.PerfilDTO;
 import com.blitz.adminpago.dto.PerfilModuloDTO;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
  * @author pgrande
  */
 @Service
-public class PerfilBO {
+public class PerfilBO implements Serializable{
 
     private Logger log = Logger.getLogger("com.blitz.negocio.PedidoBO");
     @Autowired

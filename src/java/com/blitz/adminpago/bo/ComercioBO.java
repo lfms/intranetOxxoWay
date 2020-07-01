@@ -6,6 +6,7 @@ package com.blitz.adminpago.bo;
 
 import com.blitz.adminpago.dao.ComercioDAO;
 import com.blitz.adminpago.dto.ComercioDTO;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ComercioBO {
+public class ComercioBO implements Serializable{
 
     public static Log log = LogFactory.getLog(ComercioBO.class);
     @Autowired

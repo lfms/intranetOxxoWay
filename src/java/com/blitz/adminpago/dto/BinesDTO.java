@@ -5,7 +5,9 @@
 
 package com.blitz.adminpago.dto;
 
-public class BinesDTO {
+import java.io.Serializable;
+
+public class BinesDTO implements Serializable{
 
     private String prefijo;
     private String nombreProducto;

@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Repository;
 public class ModuloDAO {
     
     private JdbcTemplate jt;
+    Log log = LogFactory.getLog(this.getClass());
 
     @Resource(name="pagosvtDS")
     public void setDataSource(DataSource dataSource) {
@@ -46,6 +49,7 @@ public class ModuloDAO {
              sql.append(" AND S.ID_PERFIL = ");
              sql.append(pnuPerfil);
         }
+        log.info(sql.toString());
         sql.append(" ORDER BY M.CATEGORIA, M.NOMBRE ");
         
         List<ModuloDTO> result = jt.query(sql.toString(), (ResultSet rs, int i ) -> {

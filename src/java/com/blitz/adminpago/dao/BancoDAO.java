@@ -23,12 +23,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class BancoDAO {
-    @Resource(name="pagosvtDS")
+    
     private JdbcTemplate jt;
     private SimpleJdbcInsert insertaBanco;
     private OracleSequenceMaxValueIncrementer siguienteBanco;
 
-
+    @Resource(name="pagosvtDS")
     public void setDataSource(DataSource dataSource) {
         this.jt = new JdbcTemplate(dataSource);
 

@@ -5,6 +5,7 @@
  */
 package com.blitz.adminpago.dao;
 
+import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class DaoTest {
+public class DaoTest implements Serializable{
     
     Log log =  LogFactory.getLog(this.getClass());
     public void test(){

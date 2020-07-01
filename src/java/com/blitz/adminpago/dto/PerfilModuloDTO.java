@@ -5,11 +5,13 @@
 
 package com.blitz.adminpago.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author pgrande
  */
-public class PerfilModuloDTO {
+public class PerfilModuloDTO implements Serializable{
     private int idPerMod;
     private int idPerfil;
     private int idModulo;

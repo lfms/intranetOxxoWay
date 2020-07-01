@@ -5,9 +5,10 @@
 
 package com.blitz.adminpago.dto;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class ListaSucursalDTO {
+public class ListaSucursalDTO implements Serializable{
 
     private Map listaSucursal;
 

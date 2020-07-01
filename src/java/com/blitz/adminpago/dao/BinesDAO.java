@@ -25,10 +25,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BinesDAO {
     
-    @Resource(name="pagosvtDS")
+    
     private JdbcTemplate jt;
     private SimpleJdbcInsert insertaBin;
-
+    @Resource(name="pagosvtDS")
     public void setDataSource(DataSource dataSource) {
         this.jt = new JdbcTemplate(dataSource);
 

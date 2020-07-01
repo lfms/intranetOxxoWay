@@ -9,7 +9,9 @@ import com.blitz.adminpago.dto.BancoDTO;
 import java.util.List;
 import java.util.Map;
 import javax.el.ELContext;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -18,6 +20,8 @@ import javax.faces.event.ActionEvent;
  * Metodos para la administracion del catalogo de bancos
  * @author PGRANDE
  */
+@ManagedBean(name = "BancoMB")
+@ViewScoped
 public class BancoMB {
     
     @ManagedProperty(value = "#{BancoBO}")

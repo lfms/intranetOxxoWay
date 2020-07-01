@@ -6,6 +6,7 @@ package com.blitz.adminpago.bo;
 
 import com.blitz.adminpago.dto.UsuarioDTO;
 import com.blitz.adminpago.dao.AccesoDAO;
+import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author SMMIGUEL
  */
 @Service
-public class AccesoBO {
+public class AccesoBO implements Serializable{
 
     public static Log log = LogFactory.getLog(AccesoBO.class);
     @Autowired

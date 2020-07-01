@@ -24,15 +24,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PerfilDAO {
 
-    @Resource(name = "pagosvtDS")
+    
     private JdbcTemplate jt;
     private SimpleJdbcInsert insertaPerfil;
     private OracleSequenceMaxValueIncrementer siguientePerfil;
     private SimpleJdbcInsert insertaPerfilModulo;
     private OracleSequenceMaxValueIncrementer siguientePerMod;
 
-    private DataSource vtas3DataSource;
-
+    //private DataSource vtas3DataSource;
+    
+    @Resource(name = "pagosvtDS")
     public void setDataSource(DataSource dataSource)  {
         jt = new JdbcTemplate(dataSource);
 
@@ -58,6 +59,8 @@ public class PerfilDAO {
     /**
      * @param vtas3DataSource the vtas3DataSource to set
      */
+    //@Resource(name = "pagosvtDS")
+    /*
     public void setVtas3DataSource(DataSource vtas3DataSource) {
         jt = new JdbcTemplate(vtas3DataSource);
 
@@ -77,7 +80,7 @@ public class PerfilDAO {
         this.siguientePerMod = new OracleSequenceMaxValueIncrementer(vtas3DataSource,"S_POL_09_T_SUBPERFIL_MODULO");
 
         this.vtas3DataSource = vtas3DataSource;
-    }
+    }*/
 
 
     public List obtenerPerfiles(PerfilDTO pobPerfil)
@@ -418,9 +421,9 @@ public class PerfilDAO {
     /**
      * @return the vtas3DataSource
      */
-    public DataSource getVtas3DataSource() {
+    /*public DataSource getVtas3DataSource() {
         return vtas3DataSource;
-    }
+    }*/
 
     
 

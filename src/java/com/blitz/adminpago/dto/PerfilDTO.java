@@ -5,9 +5,10 @@
 
 package com.blitz.adminpago.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PerfilDTO {
+public class PerfilDTO implements Serializable{
 
     private String idPerfil;
     private String idSubPerfil;

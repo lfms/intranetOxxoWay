@@ -6,6 +6,7 @@ package com.blitz.adminpago.bo;
 
 import com.blitz.adminpago.dao.SucursalDAO;
 import com.blitz.adminpago.dto.SucursalDTO;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -15,7 +16,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SucursalBO {
+public class SucursalBO implements Serializable{
 
     public static Log log = LogFactory.getLog(SucursalBO.class);
     @Autowired

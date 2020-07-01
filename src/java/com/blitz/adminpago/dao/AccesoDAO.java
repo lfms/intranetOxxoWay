@@ -45,9 +45,9 @@ public class AccesoDAO {
             dto.setUsuario(usuario);
             dto.setClave(decrypt(rs.getString("CVE_ACCESO")));
             dto.setIdTienda(rs.getString("ID_TIENDA"));
-            dto.setIdPerfil(rs.getString("ID_TIENDA"));
-            dto.setUniversal(rs.getString("ID_TIENDA"));
-            dto.setIdSubPerfil(rs.getString("ID_TIENDA"));
+            dto.setIdPerfil(rs.getString("ID_PERFIL"));
+            dto.setUniversal(rs.getString("UNIVERSAL"));
+            dto.setIdSubPerfil(rs.getString("ID_SUBPERFIL"));
             return dto;
         });
     }

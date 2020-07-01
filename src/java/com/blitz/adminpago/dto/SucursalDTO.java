@@ -5,7 +5,9 @@
 
 package com.blitz.adminpago.dto;
 
-public class SucursalDTO {
+import java.io.Serializable;
+
+public class SucursalDTO implements Serializable{
 
     private String idSucursal;
     private String cveSucursal;

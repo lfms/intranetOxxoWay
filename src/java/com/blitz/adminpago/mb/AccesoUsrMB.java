@@ -10,11 +10,9 @@ import com.blitz.adminpago.bo.ComercioBO;
 import com.blitz.adminpago.bo.ModuloBO;
 import com.blitz.adminpago.bo.PerfilBO;
 import com.blitz.adminpago.bo.SucursalBO;
-import com.blitz.adminpago.dao.DaoTest;
 import com.blitz.adminpago.dto.ListaComercioDTO;
 import com.blitz.adminpago.dto.ListaModuloDTO;
 import com.blitz.adminpago.dto.ListaPerfilDTO;
-import com.blitz.adminpago.dto.ListaSucursalDTO;
 import com.blitz.adminpago.dto.MenuDTO;
 import com.blitz.adminpago.dto.UsuarioDTO;
 import java.io.Serializable;
@@ -36,17 +34,15 @@ import org.apache.commons.logging.LogFactory;
  */
 @ManagedBean(name = "AccesoUsrMB")
 @ViewScoped
-public class AccesoUsrMB implements Serializable{
+public class AccesoUsrMB implements Serializable{   
 
     private String usuario;
     private String clave;
     private String mensajeUsr;
     private String mensajeCve;
     private String mensaje;
-    @ManagedProperty(value = "#{daoTest}")
-    transient private DaoTest daoTest;
     @ManagedProperty(value = "#{AccesoBO}")
-    transient private AccesoBO accesoBO;
+    private AccesoBO accesoBO;
     @ManagedProperty(value = "#{ModuloBO}")
     private ModuloBO moduloBO;
     @ManagedProperty(value = "#{ComercioBO}")
@@ -68,7 +64,6 @@ public class AccesoUsrMB implements Serializable{
 
     public String validaUsuario() {
         String respuesta = null;
-        daoTest.test();
         
         if(usuario == null || usuario.equals("")){
             log.info("Falta nombre de usuario");
@@ -99,6 +94,7 @@ public class AccesoUsrMB implements Serializable{
 
             //Buscamos los modulos que puede ver de acuerdo a su perfil
             MenuDTO menu = (MenuDTO) elContext.getELResolver().getValue(elContext,null,"MenuDTO");
+            if(menu == null) menu = new MenuDTO();
 
             int idPerfil = 0;
             if (usuarioValido.getIdPerfil() != null )
@@ -109,13 +105,19 @@ public class AccesoUsrMB implements Serializable{
                 idSubPerfil = Integer.parseInt(usuarioValido.getIdSubPerfil());
             */
             
+            log.info(moduloBO);
+            log.info(idPerfil);
+            log.info(usuarioValido);
             
             menu.setMenu(moduloBO.obtenerModPerfil(idPerfil,usuarioValido.getUniversal() ));
-
+            
+            log.info("Menu Size: " + menu.getMenu().size() );
+            
             mensaje = null;
 
             //Llenamos los valores de comercios y sucursales
             ListaComercioDTO listaCom = (ListaComercioDTO) elContext.getELResolver().getValue(elContext,null,"ListaComercioDTO");
+            if(listaCom == null) listaCom = new ListaComercioDTO();
             if ( listaCom == null  || listaCom.getListaComercio() == null)
             {
                 Map lista = comercioBO.obtenerComercios();
@@ -130,27 +132,29 @@ public class AccesoUsrMB implements Serializable{
                     listaCom.setListaComercioXNom(listaXcveNom);
 
             }
-
+            /*
             ListaSucursalDTO listaSuc = (ListaSucursalDTO) elContext.getELResolver().getValue(elContext,null,"ListaSucursalDTO");
             if ( listaSuc == null  || listaSuc.getListaSucursal() == null)
             {
                 Map lista = sucursalBO.obtenerSucursales();
                 if ( lista != null )
                     listaSuc.setListaSucursal(lista);
-            }
+            }*/
 
             ListaPerfilDTO listaPerfil = (ListaPerfilDTO) elContext.getELResolver().getValue(elContext,null,"ListaPerfilDTO");
+            if(listaPerfil == null) listaPerfil = new ListaPerfilDTO();
             if ( listaPerfil == null  || listaPerfil.getListaPerfil() == null)
             {
-                Map lista = getPerfilBO().obtenerPerfiles();
+                Map lista = perfilBO.obtenerPerfiles();
                 if ( lista != null )
                     listaPerfil.setListaPerfil(lista);
             }
 
             ListaModuloDTO listaModulo = (ListaModuloDTO) elContext.getELResolver().getValue(elContext,null,"ListaModuloDTO");
+            if(listaModulo == null) listaModulo = new ListaModuloDTO();
             if ( listaModulo == null  || listaModulo.getListaModulos() == null)
             {
-                Map lista = getModuloBO().obtenerModulo();
+                Map lista = moduloBO.obtenerModulo();
                 if ( lista != null )
                     listaModulo.setListaModulos(lista);
             }
@@ -171,6 +175,8 @@ public class AccesoUsrMB implements Serializable{
             log.info("usuario no valido");
             return null;
         }
+        
+        log.info("-------> " + respuesta);
         return respuesta;       
     }
 
@@ -194,84 +200,55 @@ public class AccesoUsrMB implements Serializable{
      *
      */
 
-    /**
-     * @return the usuario
-     */
+  
+//    public TiendaBO getTiendaBO() {
+//        return tiendaBO;
+//    }
+
+
+//    public void setTiendaBO(TiendaBO tiendaBO) {
+//        this.tiendaBO = tiendaBO;
+//    }
+
     public String getUsuario() {
         return usuario;
     }
 
-    /**
-     * @param usuario the usuario to set
-     */
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
 
-    /**
-     * @return the clave
-     */
     public String getClave() {
         return clave;
     }
 
-    /**
-     * @param clave the clave to set
-     */
     public void setClave(String clave) {
         this.clave = clave;
     }
 
-    /**
-     * @return the mensajeUsr
-     */
     public String getMensajeUsr() {
         return mensajeUsr;
     }
 
-    /**
-     * @param mensajeUsr the mensajeUsr to set
-     */
     public void setMensajeUsr(String mensajeUsr) {
         this.mensajeUsr = mensajeUsr;
     }
 
-    /**
-     * @return the mensajeCve
-     */
     public String getMensajeCve() {
         return mensajeCve;
     }
 
-    /**
-     * @param mensajeCve the mensajeCve to set
-     */
     public void setMensajeCve(String mensajeCve) {
         this.mensajeCve = mensajeCve;
     }
 
-    /**
-     * @return the mensaje
-     */
     public String getMensaje() {
         return mensaje;
     }
 
-    /**
-     * @param mensaje the mensaje to set
-     */
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
-    public DaoTest getDaoTest() {
-        return daoTest;
-    }
-
-    public void setDaoTest(DaoTest daoTest) {
-        this.daoTest = daoTest;
-    }
-
 
     public AccesoBO getAccesoBO() {
         return accesoBO;
@@ -281,23 +258,6 @@ public class AccesoUsrMB implements Serializable{
         this.accesoBO = accesoBO;
     }
 
-    /**
-     * @return the tiendaBO
-     */
-//    public TiendaBO getTiendaBO() {
-//        return tiendaBO;
-//    }
-
-    /**
-     * @param tiendaBO the tiendaBO to set
-     */
-//    public void setTiendaBO(TiendaBO tiendaBO) {
-//        this.tiendaBO = tiendaBO;
-//    }
-
-    /**
-     * @return the moduloBO
-     */
     public ModuloBO getModuloBO() {
         return moduloBO;
     }
@@ -306,8 +266,16 @@ public class AccesoUsrMB implements Serializable{
         this.moduloBO = moduloBO;
     }
 
+    public ComercioBO getComercioBO() {
+        return comercioBO;
+    }
+
     public void setComercioBO(ComercioBO comercioBO) {
         this.comercioBO = comercioBO;
+    }
+
+    public SucursalBO getSucursalBO() {
+        return sucursalBO;
     }
 
     public void setSucursalBO(SucursalBO sucursalBO) {
@@ -321,6 +289,10 @@ public class AccesoUsrMB implements Serializable{
     public void setPerfilBO(PerfilBO perfilBO) {
         this.perfilBO = perfilBO;
     }
+
+
+
+
     
     
 }
