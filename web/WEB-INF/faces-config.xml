@@ -19,6 +19,11 @@
             <from-outcome>accesoInvalido</from-outcome>
             <to-view-id>/login.jsp</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>reporteExcelCaja</from-outcome>
+            <to-view-id>/generaReporteCaja.jspx</to-view-id>
+            <redirect></redirect>
+        </navigation-case>
     </navigation-rule>
     
     <navigation-rule>
@@ -28,7 +33,7 @@
             <from-action>#{AccesoUsrMB.validaUsuario}</from-action>
             <from-outcome>usrvalido</from-outcome>
             <to-view-id>/blank.jsp</to-view-id>
-        </navigation-case>
+        </navigation-case>        
     </navigation-rule>
 
 </faces-config>

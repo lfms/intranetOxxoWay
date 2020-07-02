@@ -26,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import jxl.*;
 import jxl.write.*;
 import com.blitz.adminpago.dto.UsuarioDTO;
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -34,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 
 @ManagedBean(name = "ReportesMB")
 @ViewScoped
-public class ReportesMB {
+public class ReportesMB implements Serializable{
     @ManagedProperty(value = "#{PagoBO}")
     private PagoBO pagoBO;
     private ConsultaBO consultaBO;
@@ -144,6 +145,7 @@ public class ReportesMB {
 
     public String muestraPagosSinBSN()
     {
+        log.info("muestra pagos sin bsn");
         mostrarVistaMKT = false;
 
         if( parComercio == null || parComercio.length() == 0 ){
@@ -891,6 +893,125 @@ public class ReportesMB {
         }
 
         return null;
+    }
+    
+    public void generarReporteCaja(FacesContext fc) {
+
+        OutputStream out = null;
+
+        HttpServletResponse resp = (HttpServletResponse) fc.getExternalContext().getResponse();
+
+
+        resp.setContentType("application/vnd.ms-excel");
+        resp.addHeader("Content-Disposition", "attachment;filename=ReportePagos.xls");
+
+        try {
+
+            out = resp.getOutputStream();
+
+            WritableWorkbook workbook = Workbook.createWorkbook(out);
+            WritableSheet sheet = workbook.createSheet("Pagos Caja", 0);
+            int fila = 0;
+
+            List lobDatos = pagos;
+
+            if ( lobDatos == null )
+                lobDatos = pagoBO.obtenerPagosCaja(fechaI, parComercio, parEstatus);
+
+            if ( lobDatos != null )
+            {
+                Label encabezado = new Label(0, fila, "PAGO");
+                sheet.addCell(encabezado);
+                encabezado = new Label(1, fila, "TELEFONO");
+                sheet.addCell(encabezado);
+                encabezado = new Label(2, fila, "MONTO_PAGAR");
+                sheet.addCell(encabezado);
+                encabezado = new Label(3, fila, "FECHA_SOL");
+                sheet.addCell(encabezado);
+                encabezado = new Label(4, fila, "FECHA_RESP_PISA");
+                sheet.addCell(encabezado);
+                encabezado = new Label(5, fila, "ADQUIRIENTE");
+                sheet.addCell(encabezado);
+                encabezado = new Label(6, fila, "ESTATUS");
+                sheet.addCell(encabezado);
+                encabezado = new Label(7, fila, "SECUENCIA_PISA");
+                sheet.addCell(encabezado);
+                encabezado = new Label(8, fila, "MONTO_PAGADO");
+                sheet.addCell(encabezado);
+                encabezado = new Label(9, fila, "TRANSACCION");
+                sheet.addCell(encabezado);
+                encabezado = new Label(10, fila, "CAJA");
+                sheet.addCell(encabezado);
+                encabezado = new Label(11, fila, "LIBRERIA");
+                sheet.addCell(encabezado);
+                encabezado = new Label(12, fila, "ARCHIVO_CONCIL");
+                sheet.addCell(encabezado);
+
+
+                Iterator it = null;
+
+                DateFormat customDateFormat = new DateFormat("dd MMM yyyy hh:mm:ss");
+                WritableCellFormat dateFormat = new WritableCellFormat(customDateFormat);
+
+                PagoDTO pago;
+                it = lobDatos.iterator();
+                fila++;
+                while (it.hasNext()) {
+
+                    pago = (PagoDTO) it.next();
+                    Label accion = new Label(0, fila, String.valueOf(pago.getIdPago()));
+                    sheet.addCell(accion);
+                    accion = new Label(1, fila, pago.getTelefono());
+                    sheet.addCell(accion);
+                    accion = new Label(2, fila, pago.getMontoPagar());
+                    sheet.addCell(accion);
+                    accion = new Label(3, fila, pago.getFechaSol());
+                    sheet.addCell(accion);
+                    accion = new Label(4, fila, pago.getFechaRespPisa());
+                    sheet.addCell(accion);
+                    accion = new Label(5, fila, pago.getAdquiriente());
+                    sheet.addCell(accion);
+                    accion = new Label(6, fila, pago.getEstatus());
+                    sheet.addCell(accion);
+                    accion = new Label(7, fila, pago.getSecuenciaPisa());
+                    sheet.addCell(accion);
+                    accion = new Label(8, fila, pago.getMontoPagado());
+                    sheet.addCell(accion);
+                    accion = new Label(9, fila, pago.getTransaccion());
+                    sheet.addCell(accion);
+                    accion = new Label(10, fila, pago.getCaja());
+                    sheet.addCell(accion);
+                    accion = new Label(11, fila, pago.getLibreria());
+                    sheet.addCell(accion);
+                    accion = new Label(12, fila, pago.getAuditNumber());
+                    sheet.addCell(accion);
+
+                    fila++;
+
+                }
+                fila++;
+            }
+
+
+            workbook.write();
+            workbook.close();
+            out.flush();
+
+
+
+        } catch (Exception ex) {
+            System.out.println(ex)
+            ; //logger.equals("generarExcel: " + ex);
+        }
+        finally {
+            if (out != null)
+                try {
+                out.close();
+                }catch(Exception e) { ; }
+
+        }
+        fc.responseComplete();
+
     }
 
     public DataScrollerList getDataScrollerList() {

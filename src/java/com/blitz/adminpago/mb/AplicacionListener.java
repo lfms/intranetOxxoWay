@@ -11,12 +11,16 @@ import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
  * @author pgrande
  */
 public class AplicacionListener implements PhaseListener  {
+    
+    Log log = LogFactory.getLog(this.getClass());
 
     @Override
     public PhaseId getPhaseId() {
@@ -28,6 +32,14 @@ public class AplicacionListener implements PhaseListener  {
         FacesContext fc = event.getFacesContext();
         HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
         String vista = req.getRequestURI();
+        
+        if(vista.indexOf("generaReporteCaja.jspx") >= 0)
+        {
+            ELContext elContext = fc.getELContext();
+            ReportesMB reporte = (ReportesMB)elContext.getELResolver().getValue(elContext, null, "ReportesMB");
+            log.info("Generando el reporte -->");
+            reporte.generarReporteCaja(fc);
+        }
 /*
         if(vista.indexOf("generaReporte.jsp") >= 0)
         {
