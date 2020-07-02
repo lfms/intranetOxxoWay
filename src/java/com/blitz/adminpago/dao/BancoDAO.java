@@ -31,62 +31,34 @@ public class BancoDAO {
     @Resource(name="pagosvtDS")
     public void setDataSource(DataSource dataSource) {
         this.jt = new JdbcTemplate(dataSource);
-
-
-        this.insertaBanco =
-                new SimpleJdbcInsert(dataSource).withTableName("POL_32_C_BANCO")
-                .usingColumns("ID_BANCO", "NOMBRE_BANCO");
+        this.insertaBanco = new SimpleJdbcInsert(dataSource).withTableName("POL_32_C_BANCO").usingColumns("ID_BANCO", "NOMBRE_BANCO");
         this.siguienteBanco = new OracleSequenceMaxValueIncrementer(dataSource, "S_POL_32_C_BANCO");
-
-
     }
 
     public int add(BancoDTO registro) {
-        Map<String, Object> parameters = new HashMap<String, Object>(3);
-
-        int ret = 0;
+        Map<String, Object> parameters = new HashMap<>(3);
 
         parameters.put("ID_BANCO", siguienteBanco.nextIntValue());
         parameters.put("NOMBRE_BANCO", registro.getNombreBanco());
-
-        try
-        {
-            ret = insertaBanco.execute(parameters);
-        }
-        catch(Exception e)
-        {
-            ret = -1;
-        }
-
-        return ret;
+        
+        return insertaBanco.execute(parameters);       
     }
 
     public List obtenerBancos(String pstNombre) {
-
-        String sql = "SELECT ID_BANCO, NOMBRE_BANCO " +
-                "FROM POL_32_C_BANCO " +
-                "WHERE ID_BANCO > 0 ";
-
+        
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ID_BANCO, NOMBRE_BANCO FROM POL_32_C_BANCO WHERE ID_BANCO > 0 ");
         if ( pstNombre != null && pstNombre.length() > 0 )
-            sql += "AND NOMBRE_BANCO LIKE '" + pstNombre + "%' ";
+            sql.append("AND NOMBRE_BANCO LIKE '" + pstNombre + "%' ");
 
-        sql += "ORDER BY NOMBRE_BANCO";
-
-
-        RowMapper rowMapper = new RowMapper() {
-
-            public Object mapRow(ResultSet rs, int index) throws SQLException {
-
-                BancoDTO dto = new BancoDTO();
-                dto.setIdBanco(rs.getInt(1));
-                dto.setNombreBanco(rs.getString(2));
-                return dto;
-
-            }
-        };
-        List lobLista = jt.query(sql, rowMapper);
-
-        return lobLista;
+        sql.append("ORDER BY NOMBRE_BANCO");
+        
+        return jt.query(sql.toString(), (ResultSet rs, int index) -> {
+            BancoDTO dto = new BancoDTO();
+            dto.setIdBanco(rs.getInt(1));
+            dto.setNombreBanco(rs.getString(2));
+            return dto;
+        });
 
     }
 
@@ -106,12 +78,7 @@ public class BancoDAO {
                 lobHashLista.put(dto.getNombreBanco(), dto.getIdBanco());
             }
         }
-
-
-
-
         return lobHashLista;
-
     }
 
     
@@ -119,71 +86,30 @@ public class BancoDAO {
 
     public String obtenerNombreBanco(String pstIdBanco)
     {
-        String sql = "SELECT NOMBRE_BANCO " +
-                "FROM POL_32_C_BANCO " +
-                "WHERE ID_BANCO = " + pstIdBanco + " " ;
-
-        try
-        {
-            return (String) jt.queryForObject(sql,String.class);
-        }
-        catch(Exception e)
-        {
-            return null;
-        }
-
+        String sql = "SELECT NOMBRE_BANCO FROM POL_32_C_BANCO WHERE ID_BANCO = " + pstIdBanco + " ";
+        
+        return (String) jt.queryForObject(sql,String.class);
     }
 
 
     public BancoDTO obtenerBanco(String pstIdBanco)
     {
         
-        String sql = "SELECT ID_BANCO, NOMBRE_BANCO " +
-                "FROM POL_32_C_BANCO " +
-                "WHERE ID_BANCO = " + pstIdBanco + " " ;
-        try {
-            
-            BancoDTO dto = (BancoDTO) jt.queryForObject(sql, new RowMapper() {
-
-                    public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-                        BancoDTO banco = new BancoDTO();
-                        banco.setIdBanco(rs.getInt(1));
-                        banco.setNombreBanco(rs.getString(2));
-                        return banco;
-                    }
-            }
-            );
-
-            return dto;
-
-
-        }
-        catch(Exception e) {
-            return null;
-        }
-
+        String sql = "SELECT ID_BANCO, NOMBRE_BANCO FROM POL_32_C_BANCO WHERE ID_BANCO = " + pstIdBanco + " ";
+        
+        return jt.queryForObject(sql, (ResultSet rs, int index) -> {
+            BancoDTO banco = new BancoDTO();
+            banco.setIdBanco(rs.getInt(1));
+            banco.setNombreBanco(rs.getString(2));
+            return banco;
+        });
     }
 
 
     public int actualizarBanco(BancoDTO pobDatos)
     {
-        int ret = -1;
-
-        String sql = "UPDATE POL_32_C_BANCO " +
-                     "SET NOMBRE_BANCO = ? " +
-                     "WHERE ID_BANCO = ?" ;
-
-        try {
-            ret = jt.update(sql, new Object[] { pobDatos.getNombreBanco(), pobDatos.getIdBanco()});
-
-        }
-        catch(Exception e)
-        {
-            ret = -1;
-        }
-
-        return ret;
+        String sql = "UPDATE POL_32_C_BANCO SET NOMBRE_BANCO = ? WHERE ID_BANCO = ?" ;        
+        return jt.update(sql, new Object[] { pobDatos.getNombreBanco(), pobDatos.getIdBanco()});        
     }
 
 

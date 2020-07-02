@@ -7,14 +7,11 @@ package com.blitz.adminpago.dao;
 import com.blitz.adminpago.dto.UsuarioDTO;
 import com.blitz.adminpago.util.Utilerias;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 

@@ -132,14 +132,6 @@ public class AccesoUsrMB implements Serializable{
                     listaCom.setListaComercioXNom(listaXcveNom);
 
             }
-            /*
-            ListaSucursalDTO listaSuc = (ListaSucursalDTO) elContext.getELResolver().getValue(elContext,null,"ListaSucursalDTO");
-            if ( listaSuc == null  || listaSuc.getListaSucursal() == null)
-            {
-                Map lista = sucursalBO.obtenerSucursales();
-                if ( lista != null )
-                    listaSuc.setListaSucursal(lista);
-            }*/
 
             ListaPerfilDTO listaPerfil = (ListaPerfilDTO) elContext.getELResolver().getValue(elContext,null,"ListaPerfilDTO");
             if(listaPerfil == null) listaPerfil = new ListaPerfilDTO();
@@ -188,27 +180,13 @@ public class AccesoUsrMB implements Serializable{
         mensajeUsr = null;
         return null;
     }
-
-    /*
+    
     public String terminarAplicacion() {
         HttpSession session =
                 (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         session.removeAttribute("usuario");
         return "salir";
     }
-
-     *
-     */
-
-  
-//    public TiendaBO getTiendaBO() {
-//        return tiendaBO;
-//    }
-
-
-//    public void setTiendaBO(TiendaBO tiendaBO) {
-//        this.tiendaBO = tiendaBO;
-//    }
 
     public String getUsuario() {
         return usuario;
@@ -288,11 +266,6 @@ public class AccesoUsrMB implements Serializable{
 
     public void setPerfilBO(PerfilBO perfilBO) {
         this.perfilBO = perfilBO;
-    }
-
-
-
-
-    
+    }    
     
 }

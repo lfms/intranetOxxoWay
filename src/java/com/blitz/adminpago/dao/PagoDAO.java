@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,11 +41,12 @@ public class PagoDAO {
     private JdbcTemplate jt;
     private Map csMap;
     private String usrTC;
-    private String comercioBD1;
+    private String comercioBD1 = ".BSN.MKT.APT.TWA.";
     private BinesDAO binesDAO;
 
     private Logger log = Logger.getLogger("com.blitz.adminpagoline.dao.PagoDAO");
-
+    
+    @Resource(name="pagosvtDS")
     public void setDataSource(DataSource dataSource)  {
         jt = new JdbcTemplate(dataSource);
     }
@@ -55,120 +57,113 @@ public class PagoDAO {
             String pstFechaIO,String pstFechaFO, String pstImporte, String pstLogin, int reporte)
     {
 
-
-        String sql = "SELECT P.ID_PAGO, P.TELEFONO, P.MONTO_PAGAR, FECHA_SOL, " +
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT P.ID_PAGO, P.TELEFONO, P.MONTO_PAGAR, FECHA_SOL, " +
                 "FECHA_RESP_PISA, FECHA_RESP_TRO, FECHA_CONTABLE, " +
-                "FECHA_CAPTURA, HORA, DIA, MONEDA, TIPO_INGRESO, CODIGO_RESP," +
-                "TIPO_RESP, AUDIT_NUMBER, ADQUIRIENTE, TIENDA_TERMINAL, UNIDAD, " +
+                " TIPO_INGRESO, CODIGO_RESP," +
+                "TIPO_RESP, ADQUIRIENTE, TIENDA_TERMINAL, " +
                 "SECUENCIA_PISA, SALDO_VENCIDO, MIN_REANUDACION, MONTO_PAGADO, " +
-                "TRANSACCION, P.ESTATUS, P.CAJA, P.ESTATUS_CONCILPISA, P.ESTATUS_CONCILTRO " ;
-
+                "TRANSACCION, P.ESTATUS, P.CAJA, P.ESTATUS_CONCILPISA, P.ESTATUS_CONCILTRO ");
+/*
         if ( pstComercio != null && (pstComercio.equals("MKT")||pstComercio.equals("APT"))) {
             String fechaIC = pstFechaI.replaceAll("/", "-");
             String fechaFC = pstFechaF.replaceAll("/", "-");
 
-            sql +=  ",MP.TARJETA, MP.TIPOTARJETA, MP.REFERENCIA, MP.SECURE, P.CS, P.LIBRERIA, MP.CORREO, '" + pstLogin +
-                    "' FROM POL_04_C_COMERCIO C , " ;
+            //sql.append(",MP.TARJETA, MP.TIPOTARJETA, MP.REFERENCIA, MP.SECURE, P.CS, P.LIBRERIA, MP.CORREO, '" + pstLogin +
+                    //"' FROM POL_04_C_COMERCIO C , " );
 
 
-            if ( pstComercio != null && comercioBD1.indexOf(pstComercio) != -1 && Utilerias.esFechaHistorico(fechaIC))
-             sql +=  " POL_02_T_PAGO_BK P LEFT OUTER JOIN MT_PAGO_BK MP ON P.TRANSACCION =  TO_CHAR(MP.ID) " ;
-            else
-             sql +=  " POL_02_T_PAGO P LEFT OUTER JOIN MT_PAGO MP ON P.TRANSACCION =  TO_CHAR(MP.ID) " ;
+            //if ( pstComercio != null && comercioBD1.indexOf(pstComercio) != -1 && Utilerias.esFechaHistorico(fechaIC))
+                //sql.append(" POL_02_T_PAGO_BK P LEFT OUTER JOIN MT_PAGO_BK MP ON P.TRANSACCION =  TO_CHAR(MP.ID) ");
+            //else
+            sql.append(" FROM POL_02_T_PAGO P ");
 
 
-            if ( fechaIC.equals(fechaFC) == true )
-                sql+=   "AND TO_CHAR(MP.FECHAESTADO,'YYYY-MM-DD') = '" + fechaIC + "' " ;
-            else
-                sql+=   "AND TO_CHAR(MP.FECHAESTADO,'YYYY-MM-DD') BETWEEN '" + fechaIC + "' AND '" + fechaFC + "' " ;
+            //if ( fechaIC.equals(fechaFC) == true )
+                //sql.append("AND TO_CHAR(MP.FECHAESTADO,'YYYY-MM-DD') = '" + fechaIC + "' ");
+            //else
+            //sql.append("AND TO_CHAR(MP.FECHAESTADO,'YYYY-MM-DD') BETWEEN '" + fechaIC + "' AND '" + fechaFC + "' ");
 
-            sql +=  "AND MP.ESTADO IN ( 'T55', 'T54', 'T59', 'T60', 'T61') " +
-                    "WHERE P.ADQUIRIENTE = C.CVE_COMERCIO " ;
+            //sql.append("AND MP.ESTADO IN ( 'T55', 'T54', 'T59', 'T60', 'T61') WHERE P.ADQUIRIENTE = C.CVE_COMERCIO ");
         }
-        else {
-            sql +=  ",'', '', '', '', P.CS, P.LIBRERIA, '' , '" + pstLogin +
-                    "' FROM POL_04_C_COMERCIO C , " ;
-            if ( pstComercio != null && pstComercio.equals("BSN") && Utilerias.esFechaHistorico(pstFechaI))
-                sql += " POL_02_T_PAGO P  " ;
-            else
-                sql += " POL_02_T_PAGO P  " ;
+        else {*/
+            sql.append(",'', '', '', '', P.CS, P.LIBRERIA, '' , '" + pstLogin + "' FROM POL_04_C_COMERCIO C , ");
+           
+            sql.append(" POL_02_T_PAGO P  ");
 
-            sql += "WHERE P.ADQUIRIENTE = C.CVE_COMERCIO " ;
+            sql.append("WHERE TRIM(P.ADQUIRIENTE) = TRIM(C.CVE_COMERCIO) ");
                     //"FROM POL_02_T_PAGO P " +
                     //"WHERE ID_PAGO IS NOT NULL " ;
-        }
+        //}
         
         if( pstComercio != null && pstComercio.length() > 0 && !pstComercio.equals("-") && !pstComercio.equals("*") )
             //sql += "AND C.ID_COMERCIO = '" + pstComercio + "' ";
-            sql += "AND P.ADQUIRIENTE = '" + pstComercio + "' ";
+            sql.append("AND TRIM(P.ADQUIRIENTE) = TRIM('" + pstComercio + "') ");
 
         if( pstFechaI != null && pstFechaI.length() > 0 && pstFechaF != null && pstFechaF.length() > 0 )
         {
-                sql += "AND FECHA_SOL BETWEEN '" + pstFechaI + " 00:00:00' AND '" + pstFechaF + " 24:00:00' " ;
+                sql.append("AND FECHA_SOL BETWEEN TO_DATE('" + pstFechaI + " 00:00:00','YYYY/MM/DD HH24:MI:SS') AND TO_DATE('" + pstFechaF + " 23:59:59' ,'YYYY/MM/DD HH24:MI:SS')");
             //sql += "AND TO_DATE(SUBSTR(FECHA_SOL ,0, 10),'YYYY/MM/DD') >= TO_DATE('" + pstFechaI + "','YYYY/MM/DD') ";
         }
         else
         {
             if( pstFechaI != null && pstFechaI.length() > 0 )
-                sql += "AND FECHA_SOL >= '" + pstFechaI + " 00:00:00' ";
+                sql.append("AND FECHA_SOL >= '" + pstFechaI + " 00:00:00' ");
 
             if( pstFechaF != null && pstFechaF.length() > 0 )
-                sql += "AND FECHA_SOL <= '" + pstFechaF + " 24:00:00' ";
+                sql.append("AND FECHA_SOL <= '" + pstFechaF + " 24:00:00' ");
             //sql += "AND TO_DATE(SUBSTR(FECHA_SOL ,0, 10),'YYYY/MM/DD') <= TO_DATE('" + pstFechaF + "','YYYY/MM/DD') ";
-
         }
+        //if( pstFechaIO != null && pstFechaIO.length() > 0 )
+            //sql.append("AND TO_DATE(SUBSTR(MP.FECHAPAGO ,0, 10),'YYYY/MM/DD') >= TO_DATE('" + pstFechaIO + "','YYYY/MM/DD') ");
 
+        //if( pstFechaFO != null && pstFechaFO.length() > 0 )
+            //sql.append("AND TO_DATE(SUBSTR(MP.FECHAPAGO ,0, 10),'YYYY/MM/DD') <= TO_DATE('" + pstFechaFO + "','YYYY/MM/DD') ");
 
-        if( pstFechaIO != null && pstFechaIO.length() > 0 )
-            sql += "AND TO_DATE(SUBSTR(MP.FECHAPAGO ,0, 10),'YYYY/MM/DD') >= TO_DATE('" + pstFechaIO + "','YYYY/MM/DD') ";
-
-        if( pstFechaFO != null && pstFechaFO.length() > 0 )
-            sql += "AND TO_DATE(SUBSTR(MP.FECHAPAGO ,0, 10),'YYYY/MM/DD') <= TO_DATE('" + pstFechaFO + "','YYYY/MM/DD') ";
-
-        if( pstImporte != null && pstImporte.length() > 0 && !pstEstatus.equals("-") && pstComercio!=null && pstComercio.trim().equals("MKT") )
-            sql += "AND MP.IMPORTE = " + pstImporte + " ";
+        //if( pstImporte != null && pstImporte.length() > 0 && !pstEstatus.equals("-") && pstComercio!=null && pstComercio.trim().equals("MKT") )
+            //sql.append("AND MP.IMPORTE = " + pstImporte + " ");
 
 
         if( pstSucursal != null && pstSucursal.length() > 0 && !pstSucursal.equals("-") && !pstSucursal.equals("*") )
         {
             if ( pstComercio!=null && pstComercio.trim().equals("BSN"))
-                sql += "AND TIENDA_TERMINAL LIKE '%" + pstSucursal + "' ";
+                sql.append("AND TIENDA_TERMINAL LIKE '%" + pstSucursal + "' ");
             else
-                sql += "AND TIENDA_TERMINAL LIKE '" + pstSucursal + "%' ";
+                sql.append("AND TIENDA_TERMINAL LIKE '" + pstSucursal + "%' ");
         }
 
         if( pstEstatus != null && pstEstatus.length() > 0 && !pstEstatus.equals("-") && !pstEstatus.equals("*") )
-            sql += "AND P.ESTATUS = '" + pstEstatus + "' ";
+            sql.append("AND P.ESTATUS = '" + pstEstatus + "' ");
 
         if( pstAutorizacion != null && pstAutorizacion.length() > 0 )
-            sql += "AND P.ID_PAGO = " + pstAutorizacion + " ";
+            sql.append("AND P.ID_PAGO = " + pstAutorizacion + " ");
 
         if( pstTransaccion != null && pstTransaccion.length() > 0 )
-            sql += "AND P.TRANSACCION = '" + pstTransaccion + "' ";
+            sql.append("AND P.TRANSACCION = '" + pstTransaccion + "' ");
 
         if( pstTelefono != null && pstTelefono.length() > 0 )
-            sql += "AND P.TELEFONO = " + pstTelefono + " ";
-
+            sql.append("AND P.TELEFONO = " + pstTelefono + " ");
+        /*
         if( pstTarjeta != null && pstTarjeta.length() > 0 && 
                 pstComercio!=null && (pstComercio.trim().equals("MKT")||pstComercio.trim().equals("APT") ))
         {
             Rijndael_Algorithm util = new Rijndael_Algorithm();
-            sql += "AND (MP.TARJETA = '" + pstTarjeta + "' OR MP.TARJETA = '" + util.Encriptar(pstTarjeta) + "' ) " ;
-        }
+            sql.append("AND (MP.TARJETA = '" + pstTarjeta + "' OR MP.TARJETA = '" + util.Encriptar(pstTarjeta) + "' ) ");
+        }*/
 
-        if( pstRefBanco != null && pstRefBanco.length() > 0 && 
+        /*if( pstRefBanco != null && pstRefBanco.length() > 0 && 
                 pstComercio!=null && (pstComercio.trim().equals("MKT") ||pstComercio.trim().equals("APT") ) )
-            sql += "AND MP.REFERENCIA = '" + pstRefBanco + "' ";
+            sql.append("AND MP.REFERENCIA = '" + pstRefBanco + "' ");*/
 
         if( pstCS != null && pstCS.length() > 0 && !pstCS.equals("*")  )
-            sql += "AND P.CS IN (" + pstCS + ")  ";
+            sql.append("AND P.CS IN (" + pstCS + ")  ");
 
         if( pstLib != null && pstLib.length() > 0 && !pstLib.equals("*") )
-            sql += "AND P.LIBRERIA = '" + pstLib + "'  ";
+            sql.append("AND P.LIBRERIA = '" + pstLib + "'  ");
 
         //sql += "ORDER BY P.ID_PAGO ";
 
-
+        log.info(sql.toString());
 
         RowMapper rowMapper = new RowMapper() {
                 DecimalFormat myFormatter = new DecimalFormat("###,##0.00");
@@ -189,32 +184,32 @@ public class PagoDAO {
                         pago.setFechaRespPisa(rs.getString(5));
                         pago.setFechaRespTro(rs.getString(6));
                         pago.setFechaContable(rs.getString(7));
-                        pago.setFechaCaptura(rs.getString(8));
-                        pago.setHora(rs.getString(9));
-                        pago.setDia(rs.getString(10));
-                        pago.setMoneda(rs.getString(11));
-                        pago.setTipoIngreso(rs.getString(12));
-                        pago.setCodigoResp(rs.getString(13));
-                        pago.setTipoResp(rs.getString(14));
-                        pago.setAuditNumber(rs.getString(15));
-                        pago.setAdquiriente(rs.getString(16));
-                        pago.setTiendaTerm(rs.getString(17));
-                        pago.setUnidad(rs.getString(18));
-                        pago.setSecuenciaPisa(rs.getString(19));
-                        pago.setSaldoVencido(rs.getString(20));
-                        pago.setMinReanudacion(rs.getString(21));
+                        //pago.setFechaCaptura(rs.getString(8));
+                        //pago.setHora(rs.getString(9));
+                        //pago.setDia(rs.getString(10));
+                        //pago.setMoneda(rs.getString(11));
+                        pago.setTipoIngreso(rs.getString(8));
+                        pago.setCodigoResp(rs.getString(9));
+                        pago.setTipoResp(rs.getString(10));
+                        //pago.setAuditNumber(rs.getString(15));
+                        pago.setAdquiriente(rs.getString(11));
+                        pago.setTiendaTerm(rs.getString(12));
+                        //pago.setUnidad(rs.getString(18));
+                        pago.setSecuenciaPisa(rs.getString(13));
+                        pago.setSaldoVencido(rs.getString(14));
+                        pago.setMinReanudacion(rs.getString(15));
                         try
                         {
-                            double ld = rs.getDouble(22);
+                            double ld = rs.getDouble(16);
                             pago.setMontoPagado(myFormatter.format(ld));
                         } catch(Exception e){;}
-                        pago.setTransaccion(rs.getString(23));
-                        pago.setEstatus(rs.getString(24));
-                        pago.setCaja(rs.getString(25));
-                        pago.setEstatusConcilPisa(rs.getString(26));
-                        pago.setEstatusConcilTro(rs.getString(27));
-                        String tarjeta = rs.getString(28);
-
+                        pago.setTransaccion(rs.getString(17));
+                        pago.setEstatus(rs.getString(18));
+                        pago.setCaja(rs.getString(19));
+                        pago.setEstatusConcilPisa(rs.getString(20));
+                        pago.setEstatusConcilTro(rs.getString(21));
+                        /*String tarjeta = rs.getString(28);
+                        
                         try {
                             if (tarjeta != null && !tarjeta.isEmpty()&& tarjeta.length()> 16) {
                                  tarjetaDesencriptada=util.Desencriptar(tarjeta);
@@ -231,12 +226,15 @@ public class PagoDAO {
                             }
                         catch(Exception e) {
                             pago.setNumeroTC(tarjeta);
-                        }
+                        }*/
+                        /*
                         if (pago.getAdquiriente() != null && pago.getAdquiriente().startsWith("MKT")
                                 && (rs.getString(29)== null || rs.getString(29).length()==0))
                             pago.setTipoTC("A"); //tipo de tarjeta american express
                         else
                             pago.setTipoTC(rs.getString(29)); //tipo de tarjeta
+                        */
+                        /*
                         pago.setAutorizacion(rs.getString(30));
                         pago.setSecure(rs.getString(31));
                         pago.setClaseServicio(rs.getString(32));
@@ -250,20 +248,20 @@ public class PagoDAO {
                             String tarj = pago.getNumeroTC();
                             if ( tarj != null && tarj.length() > 3 )
                                 pago.setNumeroTC("************"+tarj.substring(tarj.length()-4));
-                        }
-
+                        }*/
+                         /*
                         String csHogar = (String)csMap.get("Hogar");
                         String csNegocio = (String)csMap.get("Negocio");
                         if ( pago.getClaseServicio() != null && csHogar.indexOf(pago.getClaseServicio().trim()) != -1)
                             pago.setTipotel("H");
                         else if(pago.getClaseServicio() != null && csNegocio.indexOf(pago.getClaseServicio().trim()) != -1)
                             pago.setTipotel("N");
-
+                        */
                         return pago;
                 }
         };
 
-         return jt.query(sql,rowMapper);
+         return jt.query(sql.toString(),rowMapper);
 
 
     }
@@ -2094,7 +2092,7 @@ public class PagoDAO {
 
     public List obtenerPagosCaja(String pstFechaI, String pstComercio, String pstEstatus)
     {
-
+        /*    
         String sql = "SELECT ID_PAGO, TELEFONO, FECHA_SOL, " +
                 "FECHA_RESP_PISA, ADQUIRIENTE, SECUENCIA_PISA, MONTO_PAGADO, " +
                 "TRANSACCION, ESTATUS, CAJA, C.ARCHIVO , LIBRERIA, MONTO_PAGAR ";
@@ -2105,8 +2103,13 @@ public class PagoDAO {
             sql +=  "FROM POL_02_T_PAGO P ";
 
         sql += "LEFT OUTER JOIN  POL_13_T_CONCILTERCERO C ON P.ID_CONCILTRO = C.ID_CONCILTRO " +
-                "WHERE ID_PAGO > 0 " ;
-
+                "WHERE ID_PAGO > 0 " ;*/
+        
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ID_PAGO, TELEFONO, FECHA_SOL, FECHA_RESP_PISA, ADQUIRIENTE, SECUENCIA_PISA, MONTO_PAGADO, ");
+        sql.append("TRANSACCION, ESTATUS, CAJA, LIBRERIA, MONTO_PAGAR FROM POL_02_T_PAGO P ");
+        sql.append("WHERE ID_PAGO > 0 ");
+        
         if( pstFechaI != null && pstFechaI.length() > 0 ) // La caja del dia seleccionado empieza desde el dia anterior a las 19:00hr
         {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -2116,20 +2119,20 @@ public class PagoDAO {
             String lstFechaIni = sdf.format(lobFecha.getTime());
 
 
-            sql += "AND FECHA_SOL BETWEEN '" + lstFechaIni + " 00:00:00' AND '" + pstFechaI +  " 24:00:00' " +
-                "AND CAJA = TRIM(ADQUIRIENTE)||TO_CHAR(TO_DATE('" + pstFechaI + "','YYYY/MM/DD'),'YYMMDD')" ;
+            sql.append("AND FECHA_SOL BETWEEN TO_DATE('" + lstFechaIni + " 00:00:00', 'YYYY/MM/DD HH24:MI:SS') AND TO_DATE('" + pstFechaI +  " 23:59:59','YYYY/MM/DD HH24:MI:SS' ) ");
+            sql.append("AND CAJA = TRIM(ADQUIRIENTE)||TO_CHAR(TO_DATE('" + pstFechaI + "','YYYY/MM/DD'),'YYMMDD')") ;
         }
 
 
         if( pstComercio != null && pstComercio.length() > 0 && !pstComercio.equals("-") && !pstComercio.equals("*") )
-            sql += "AND ADQUIRIENTE = '" + pstComercio + "' ";
+            sql.append("AND ADQUIRIENTE = '" + pstComercio + "' ");
 
         if( pstEstatus != null && pstEstatus.length() > 0 && !pstEstatus.equals("-") && !pstEstatus.equals("*") )
-            sql += "AND ESTATUS = '" + pstEstatus + "' ";
+            sql.append("AND ESTATUS = '" + pstEstatus + "' ");
 
-        sql += "ORDER BY ID_PAGO ";
+        sql.append("ORDER BY ID_PAGO ");
 
-
+        log.info(sql);
         RowMapper rowMapper = new RowMapper() {
                 DecimalFormat myFormatter = new DecimalFormat("###,##0.00");
 
@@ -2150,15 +2153,15 @@ public class PagoDAO {
                         pago.setTransaccion(rs.getString(8));
                         pago.setEstatus(rs.getString(9));
                         pago.setCaja(rs.getString(10));
-                        pago.setAuditNumber(rs.getString(11));
-                        pago.setLibreria(rs.getString(12));
-                        pago.setMontoPagar(rs.getString(13));
+                        //pago.setAuditNumber(rs.getString(11));
+                        pago.setLibreria(rs.getString(11));
+                        pago.setMontoPagar(rs.getString(12));
 
                         return pago;
                 }
         };
 
-         return jt.query(sql,rowMapper);
+         return jt.query(sql.toString(),rowMapper);
 
 
 
@@ -2168,34 +2171,28 @@ public class PagoDAO {
     public PagoDTO obtenerTotalesPagosCaja(String pstFechaI, String pstComercio, String pstEstatus)
     {
 
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) , SUM(MONTO_PAGADO) ");
 
-        String sql = "SELECT COUNT(*) , SUM(MONTO_PAGADO) " ;
-
-        if ( pstComercio != null && (pstComercio.equals("MKT")||pstComercio.equals("APT")) && Utilerias.esFechaHistorico(pstFechaI))
-            sql +=  "FROM POL_02_T_PAGO_BK P ";
-        else
-            sql +=  "FROM POL_02_T_PAGO P ";
-
-
-        sql += "WHERE ID_PAGO > 0 " ;
+        sql.append("FROM POL_02_T_PAGO P WHERE ID_PAGO > 0  ");
 
         if( pstFechaI != null && pstFechaI.length() > 0 ) // La caja del dia seleccionado empieza desde el dia anterior a las 19:00hr
         {
-            sql += "AND TO_DATE(SUBSTR(FECHA_SOL ,0, 10),'YYYY/MM/DD') " +
-                "BETWEEN TO_DATE('" + pstFechaI + "','YYYY/MM/DD')-1 " +
-                "AND TO_DATE('" + pstFechaI + "','YYYY/MM/DD') " +
-                "AND CAJA = TRIM(ADQUIRIENTE)||TO_CHAR(TO_DATE('" + pstFechaI + "','YYYY/MM/DD'),'YYMMDD')";
+            sql.append("AND TO_DATE(SUBSTR(FECHA_SOL ,0, 9),'YYYY/MM/DD') ");
+            sql.append("BETWEEN TO_DATE('" + pstFechaI + "','YYYY/MM/DD')-1 ");
+            sql.append("AND TO_DATE('" + pstFechaI + "','YYYY/MM/DD') ");
+            sql.append("AND CAJA = TRIM(ADQUIRIENTE)||TO_CHAR(TO_DATE('" + pstFechaI + "','YYYY/MM/DD'),'YYMMDD')");
         }
 
         if( pstComercio != null && pstComercio.length() > 0 && !pstComercio.equals("-") && !pstComercio.equals("*") )
-            sql += "AND ADQUIRIENTE = '" + pstComercio + "' ";
+            sql.append("AND ADQUIRIENTE = '" + pstComercio + "' ");
 
         if( pstEstatus != null && pstEstatus.length() > 0 && !pstEstatus.equals("-") && !pstEstatus.equals("*") )
-            sql += "AND ESTATUS = '" + pstEstatus + "' ";
+            sql.append("AND ESTATUS = '" + pstEstatus + "' ");
 
-
+        log.info(sql.toString());
         try {
-        PagoDTO dto = (PagoDTO) jt.queryForObject(sql, new RowMapper() {
+        PagoDTO dto = (PagoDTO) jt.queryForObject(sql.toString(), new RowMapper() {
 
                     public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
                         DecimalFormat myFormatter = new DecimalFormat("###,##0.00");
@@ -2212,6 +2209,7 @@ public class PagoDAO {
 
         }
         catch(Exception e) {
+            e.printStackTrace();
             return null;
         }
 

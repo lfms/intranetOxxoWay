@@ -5,11 +5,13 @@
 
 package com.blitz.adminpago.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author pgrande
  */
-public class PagoDTO {
+public class PagoDTO implements Serializable{
 
     private String idPago;
     private String telefono;

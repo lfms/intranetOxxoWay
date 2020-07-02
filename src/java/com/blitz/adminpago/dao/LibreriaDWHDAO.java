@@ -33,15 +33,7 @@ public class LibreriaDWHDAO {
                 //Se quedan muchos sin aplicar por esta condicion: PGM 11Mar
                 //"AND fecha_desconexion = '00000000'" ;
 
-        try
-        {
             return (String) jt.queryForObject(sql,String.class);
-        }
-        catch(Exception e)
-        {
-            //log.info("DWH->" + e.toString());
-            return null;
-        }
     }
 
     public String obtenerLibreria(String pstTelefono) {
@@ -52,15 +44,8 @@ public class LibreriaDWHDAO {
                 "AND status = '0' " +
                 "AND fecha_desconexion = '00000000'" ;
 
-        try
-        {
-            return (String) jt.queryForObject(sql,String.class);
-        }
-        catch(Exception e)
-        {
-            //log.info("DWH->" + e.toString());
-            return null;
-        }
+        return (String) jt.queryForObject(sql,String.class);
+      
     }
 
 

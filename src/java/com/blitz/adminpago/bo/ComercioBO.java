@@ -8,8 +8,8 @@ import com.blitz.adminpago.dao.ComercioDAO;
 import com.blitz.adminpago.dto.ComercioDTO;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +28,15 @@ public class ComercioBO implements Serializable{
     }
 
 
-    public HashMap obtenerComercios() {
+    public Map obtenerComercios() {
         return comercioDAO.obtenerComercios();
     }
 
-    public HashMap obtenerComerciosXcve() {
+    public Map obtenerComerciosXcve() {
         return comercioDAO.obtenerComerciosXcve();
     }
 
-    public HashMap obtenerComerciosXNomCve() {
+    public Map obtenerComerciosXNomCve() {
         return comercioDAO.obtenerComerciosXNomCve();
     }
 

@@ -15,14 +15,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- *
- * @author pgrande
- */
 public class PagoBO {
 
     private Logger log = Logger.getLogger("com.blitz.adminpagoline.bo.PagoBO");
+    @Autowired
     private PagoDAO pagoDAO;
     private PagoDAO pagoDAO2;
     private String comercioBD1;
@@ -36,7 +34,7 @@ public class PagoBO {
         if ( pstComercio != null && comercioBD1.indexOf(pstComercio) == -1 )
             lnuBD = 2;
 
-        return getPagoDAOBD(lnuBD).obtenerPagos(pstFechaI, pstFechaF, pstComercio, pstSucursal, pstEstatus, pstAutorizacion, pstTelefono, pstTransaccion, pstTarjeta,
+        return pagoDAO.obtenerPagos(pstFechaI, pstFechaF, pstComercio, pstSucursal, pstEstatus, pstAutorizacion, pstTelefono, pstTransaccion, pstTarjeta,
                 pstRefBanco, pstCS, pstLib, pstFechaIO,pstFechaFO, pstImporte, pstLogin, reporte);
     }
 
@@ -65,17 +63,16 @@ public class PagoBO {
 
         if ( pstComercio != null && pstComercio.equals("*"))
         {
+            log.info("obtener pagos - dentro del comercio");
             // BSN, MKT
             pagos = getPagoDAOBD(lnuBD).obtenerPagosCaja(pstFechaI, null, pstEstatus);
 
             lnuBD = 2; //Los demas terceros
-            List pagos2 = getPagoDAOBD(lnuBD).obtenerPagosCaja(pstFechaI, null, pstEstatus);
-
-            pagos.addAll(pagos2);
 
         }
         else
         {
+            log.info("obtener pagos - no commercio");
             lnuBD = 1; //BSN, MKT
             if ( pstComercio != null && comercioBD1.indexOf(pstComercio) == -1 )
                 lnuBD = 2;
@@ -260,48 +257,36 @@ public class PagoBO {
 
         if ( pstComercio != null && pstComercio.equals("*"))
         {
+            log.info("dentro del commercio");
             // BSN, MKT
             pago1 = getPagoDAOBD(lnuBD).obtenerTotalesPagosCaja(pstFechaI, null, pstEstatus);
-
             lnuBD = 2; //Los demas terceros
             PagoDTO pago2 = getPagoDAOBD(lnuBD).obtenerTotalesPagosCaja(pstFechaI, null, pstEstatus);
-
             if ( pago2 != null )
             {
                 int totalPagos = Integer.parseInt(pago1.getIdPago());
                 totalPagos += Integer.parseInt(pago2.getIdPago());
-
                 pago1.setIdPago(String.valueOf(totalPagos));
-
                 double totalImporte = pago1.getImportePagado();
-                totalImporte += pago2.getImportePagado();
-
-                DecimalFormat myFormatter = new DecimalFormat("###,##0.00");
+                totalImporte += pago2.getImportePagado();                
                 try
                 {
-                    pago1.setMontoPagado(myFormatter.format(totalImporte));
+                    pago1.setMontoPagado(this::FormatMonto);
                     
-                } catch(Exception e){;}
-
-
+                } catch(Exception e){}
             }
-
-        }
-        else
-        {
+        }else {
+            log.info("fuera del comercio");
             lnuBD = 1; //BSN, MKT
             if ( pstComercio != null && comercioBD1.indexOf(pstComercio) == -1 )
                 lnuBD = 2;
-
-            pago1 = getPagoDAOBD(lnuBD).obtenerTotalesPagosCaja(pstFechaI, pstComercio, pstEstatus);
-
-            //Formateamos el importe total
-            DecimalFormat myFormatter = new DecimalFormat("###,##0.00");
+            pago1 = getPagoDAOBD(lnuBD).obtenerTotalesPagosCaja(pstFechaI, pstComercio, pstEstatus);            
             try
             {
-                pago1.setMontoPagado(myFormatter.format(pago1.getImportePagado()));
+                pago1.setMontoPagado(this::FormatMonto);
 
-            } catch(Exception e){;}
+            } catch(Exception e){
+            }
 
         }
 
@@ -319,6 +304,7 @@ public class PagoBO {
     {
         return pagoDAO.obtenerPagosAPTPorReferencia(fecha, oficina, soloPendientes);
     }
+    
     public List obtenerPagosAPTPorReferenciaCorte(String fecha, String oficina)
     {
         return pagoDAO.obtenerPagosAPTPorReferenciaCorte(fecha, oficina);
@@ -340,7 +326,7 @@ public class PagoBO {
         if ( pnuBD == 1 )
             return pagoDAO;
         else
-            return pagoDAO2;
+            return pagoDAO;
 
     }
 
@@ -358,6 +344,9 @@ public class PagoBO {
         this.comercioBD1 = comercioBD1;
     }
 
-
+    public String FormatMonto(String s){
+        DecimalFormat myFormatter = new DecimalFormat("###,##0.00");
+        return myFormatter.format(s);
+    }
 
 }

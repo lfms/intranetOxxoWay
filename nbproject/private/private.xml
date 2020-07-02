@@ -3,13 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/web/WEB-INF/resource/qa/app.properties</file>
+            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/mb/ReportesMB.java</file>
+            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/web/repTiendaSuc.jsp</file>
+            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/bo/PagoBO.java</file>
             <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/mb/AccesoUsrMB.java</file>
+            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/bo/SucursalBO.java</file>
+            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/dao/SucursalDAO.java</file>
+            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/dao/ComercioDAO.java</file>
             <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/config/SpringCoreConfig.java</file>
-            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/dao/AccesoDAO.java</file>
-            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/dao/ModuloDAO.java</file>
-            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/bo/AccesoBO.java</file>
-            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/bo/ModuloBO.java</file>
+            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/dao/BinesDAO.java</file>
+            <file>file:/C:/Users/Charolastros/Documents/NetBeansProjects/intranetOxxoWay/src/java/com/blitz/adminpago/bo/ConsultaBO.java</file>
         </group>
     </open-files>
 </project-private>

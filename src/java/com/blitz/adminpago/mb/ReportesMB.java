@@ -14,15 +14,12 @@ import com.blitz.adminpago.bo.SucursalBO;
 import com.blitz.adminpago.dto.ConsultaDTO;
 import com.blitz.adminpago.dto.ListaSucursalDTO;
 import com.blitz.adminpago.dto.PagoDTO;
-import com.blitz.adminpago.util.UtilPago;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.el.ELContext;
-import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,21 +31,14 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import com.blitz.pagoenlinea.ws.propiedad.CargoDTO;
 
-/**
- *
- * @author pgrande
- */
 @ManagedBean(name = "ReportesMB")
 @ViewScoped
 public class ReportesMB {
-
+    @ManagedProperty(value = "#{PagoBO}")
     private PagoBO pagoBO;
-    private EnvioReportesBO envioReportesBO;
-
-    private CargoBO cargoBO;
     private ConsultaBO consultaBO;
+    @ManagedProperty(value = "#{SucursalBO}")
     private SucursalBO sucursalBO;
     private DataScrollerList dataScrollerList;
     private String parSucursal;
@@ -73,20 +63,19 @@ public class ReportesMB {
     private boolean mostrarVistaMKT;
     @ManagedProperty(value = "#{estatusPagoMap}")
     private Map estatusPagoMap;
-    private Map comercios;
-    private Map csMap;
+    private Map comercios;    
+    @ManagedProperty(value = "#{csMap}")
+    private Map csMap;    
+    @ManagedProperty(value = "#{libreriaMap}")
     private Map libreriaMap;
     private List pagos;
     private List pagosTel;
     private boolean mostrarPagosTel;
     private boolean mostrarErrorPagosTel;
-
-    private DataScrollerList dataScrollerList2;
     private List consTel;
     private boolean mostrarConsTel;
     private boolean mostrarErrorConsTel;
     private String msgErrorConsTel;
-
     private String adquiriente;
     private String fechaArchivoPisa;
     private String fechaArchivoTercero;
@@ -157,17 +146,13 @@ public class ReportesMB {
     {
         mostrarVistaMKT = false;
 
-        if( parComercio == null || parComercio.length() == 0 
-//                || parComercio.startsWith("BSN") || parComercio.startsWith("MKT") || parComercio.startsWith("APT"))
-                )
-        {
+        if( parComercio == null || parComercio.length() == 0 ){
             mostrarPagos = false;
             mostrarErrorPagos = true;
             msgError = "SELECCIONE UN COMERCIO";
             return null;
 
         }
-
 
         try
         {
@@ -204,14 +189,13 @@ public class ReportesMB {
         }
         catch(Exception e)
         {
+            e.printStackTrace();
             return null;
         }
 
         return null;
 
     }
-
-
 
     public String muestraPagosTelefono()
     {
@@ -291,70 +275,10 @@ public class ReportesMB {
         return null;
 
     }
-
-    public String muestraCargos()
-    {
-
-        if( fechaI == null || fechaI.length() == 0 )
-        {
-            mostrarPagos = false;
-            mostrarErrorPagos = true;
-            msgError = "SELECCIONE UNA FECHA DE CONFERENCIA";
-            return null;
-
-        }
-
-//        try
-//        {
-            filtros = this.obtenerRotuloFiltros();
-
-//            HttpSession session =
-//                    (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-//            UsuarioDTO usuario = (UsuarioDTO)session.getAttribute("usuario");
-//
-//            //Validamos el perfil del usuario y limitamos la visualizacion de la TC a toda o la terminacion segun el caso
-//            String login = usuario.getUsuario();
-
-            //Cambiamos el formato de fecha:
-            String fechaFtoI = fechaI.replaceAll("/", "");
-            String fechaFtoF = fechaF.replaceAll("/", "");
-            
-            //@Probablemente
-            /*
-            pagos = cargoBO.obtenerCargos(fechaFtoI, fechaFtoF,  parIdMtPago, parTelefono);
-
-            if( pagos != null && pagos.size() > 0 )
-            {
-                mostrarPagos = true;
-                mostrarErrorPagos = false;
-                setMsgError(null);
-                dataScrollerList = new DataScrollerList(pagos);
-            }
-            else
-            {
-                mostrarPagos = false;
-                mostrarErrorPagos = true;
-                setMsgError("NO EXISTEN PAGOS CON LOS DATOS DE BUSQUEDA SELECCIONADOS");
-            }
-
-        }
-        catch(Exception e)
-        {
-            return null;
-        }
-        */
-        return null;
-
-    }
-
-
-
-
-
-
+    
     public void obtenerSucursal(ValueChangeEvent event)
     {
-
+        log.info("Obteniendo sucursales");
         String lstCveCom = (String) event.getNewValue();
         //Ya no trae el id_comercio sino la cve_comercio
 
@@ -938,22 +862,15 @@ public class ReportesMB {
             mostrarErrorPagos = true;
             msgError = "SELECCIONE UN COMERCIO";
             return null;
-
         }
-
-
+        log.info("Buscando Pagos ----------------->");
         try
         {
             filtros = this.obtenerRotuloFiltros();
-
-
             pagos = pagoBO.obtenerPagosCaja(fechaI, parComercio, parEstatus);
-
-            //if ( parComercio != null && parComercio.equals("MKT"))
-            //    mostrarVistaMKT = true;
-
             if( pagos != null && pagos.size() > 0 )
             {
+                log.info("Buscando Pagos ----------------->");
                 totalesFiltro = pagoBO.obtenerTotalesPagosCaja(fechaI, parComercio, parEstatus);
                 mostrarPagos = true;
                 mostrarErrorPagos = false;
@@ -967,1011 +884,335 @@ public class ReportesMB {
                 setMsgError("NO EXISTEN PAGOS CON LOS DATOS DE BUSQUEDA SELECCIONADOS");
             }
 
-        }
-        catch(Exception e)
+        }catch(Exception e)
         {
+            e.printStackTrace();
             return null;
         }
 
         return null;
-
     }
 
-
-    public void generarReporteCaja(FacesContext fc) {
-
-        OutputStream out = null;
-
-        HttpServletResponse resp = (HttpServletResponse) fc.getExternalContext().getResponse();
-
-
-        resp.setContentType("application/vnd.ms-excel");
-        resp.addHeader("Content-Disposition", "attachment;filename=ReportePagos.xls");
-
-        try {
-
-            out = resp.getOutputStream();
-
-            WritableWorkbook workbook = Workbook.createWorkbook(out);
-            WritableSheet sheet = workbook.createSheet("Pagos Caja", 0);
-            int fila = 0;
-
-            List lobDatos = pagos;
-
-            if ( lobDatos == null )
-                lobDatos = pagoBO.obtenerPagosCaja(fechaI, parComercio, parEstatus);
-
-            if ( lobDatos != null )
-            {
-                Label encabezado = new Label(0, fila, "PAGO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(1, fila, "TELEFONO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(2, fila, "MONTO_PAGAR");
-                sheet.addCell(encabezado);
-                encabezado = new Label(3, fila, "FECHA_SOL");
-                sheet.addCell(encabezado);
-                encabezado = new Label(4, fila, "FECHA_RESP_PISA");
-                sheet.addCell(encabezado);
-                encabezado = new Label(5, fila, "ADQUIRIENTE");
-                sheet.addCell(encabezado);
-                encabezado = new Label(6, fila, "ESTATUS");
-                sheet.addCell(encabezado);
-                encabezado = new Label(7, fila, "SECUENCIA_PISA");
-                sheet.addCell(encabezado);
-                encabezado = new Label(8, fila, "MONTO_PAGADO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(9, fila, "TRANSACCION");
-                sheet.addCell(encabezado);
-                encabezado = new Label(10, fila, "CAJA");
-                sheet.addCell(encabezado);
-                encabezado = new Label(11, fila, "LIBRERIA");
-                sheet.addCell(encabezado);
-                encabezado = new Label(12, fila, "ARCHIVO_CONCIL");
-                sheet.addCell(encabezado);
-
-
-                Iterator it = null;
-
-                DateFormat customDateFormat = new DateFormat("dd MMM yyyy hh:mm:ss");
-                WritableCellFormat dateFormat = new WritableCellFormat(customDateFormat);
-
-                PagoDTO pago;
-                it = lobDatos.iterator();
-                fila++;
-                while (it.hasNext()) {
-
-                    pago = (PagoDTO) it.next();
-                    Label accion = new Label(0, fila, String.valueOf(pago.getIdPago()));
-                    sheet.addCell(accion);
-                    accion = new Label(1, fila, pago.getTelefono());
-                    sheet.addCell(accion);
-                    accion = new Label(2, fila, pago.getMontoPagar());
-                    sheet.addCell(accion);
-                    accion = new Label(3, fila, pago.getFechaSol());
-                    sheet.addCell(accion);
-                    accion = new Label(4, fila, pago.getFechaRespPisa());
-                    sheet.addCell(accion);
-                    accion = new Label(5, fila, pago.getAdquiriente());
-                    sheet.addCell(accion);
-                    accion = new Label(6, fila, pago.getEstatus());
-                    sheet.addCell(accion);
-                    accion = new Label(7, fila, pago.getSecuenciaPisa());
-                    sheet.addCell(accion);
-                    accion = new Label(8, fila, pago.getMontoPagado());
-                    sheet.addCell(accion);
-                    accion = new Label(9, fila, pago.getTransaccion());
-                    sheet.addCell(accion);
-                    accion = new Label(10, fila, pago.getCaja());
-                    sheet.addCell(accion);
-                    accion = new Label(11, fila, pago.getLibreria());
-                    sheet.addCell(accion);
-                    accion = new Label(12, fila, pago.getAuditNumber());
-                    sheet.addCell(accion);
-
-                    fila++;
-
-                }
-                fila++;
-            }
-
-
-            workbook.write();
-            workbook.close();
-            out.flush();
-
-
-
-        } catch (Exception ex) {
-            System.out.println(ex)
-            ; //logger.equals("generarExcel: " + ex);
-        }
-        finally {
-            if (out != null)
-                try {
-                out.close();
-                }catch(Exception e) { ; }
-
-        }
-        fc.responseComplete();
-
-    }
-
-
-
-    public String obtenerSaldo()
-    {
-
-        if ( parTelefono == null || parTelefono.length() != 10 )
-        {
-            mostrarPagosTel = false;
-            mostrarErrorPagosTel = true;
-            setMsgError("PROPORCIONE UN NUMERO DE TELEFONO VALIDO");
-            return null;
-        }
-
-        try
-        {
-
-            UtilPago util = new UtilPago();
-            ConsultaDTO consultaDTO = new ConsultaDTO();
-            consultaDTO.setTelefono(parTelefono);
-            consultaDTO.setAdquiriente("MKT");
-            consultaDTO.setTiendaTerminal("0001");
-            //String peticion = util.generalXMLConsulta(consultaDTO);
-            String peticion = null;
-            
-            if ( (Integer.parseInt(parTelefono.substring(6)) % 2 ) > 0 )
-                saldo = util.enviaPeticionConsulta(peticion);
-            else
-                saldo = util.enviaPeticionConsulta2(peticion);
-
-
-        }
-        catch(Exception e)
-        {
-            return null;
-        }
-
-        return null;
-
-    }
-
-
-    public void generarReporteCargos(FacesContext fc) {
-
-        OutputStream out = null;
-
-        HttpServletResponse resp = (HttpServletResponse) fc.getExternalContext().getResponse();
-
-
-        resp.setContentType("application/vnd.ms-excel");
-        resp.addHeader("Content-Disposition", "attachment;filename=ReporteCargos090.xls");
-
-        try {
-
-            out = resp.getOutputStream();
-
-            WritableWorkbook workbook = Workbook.createWorkbook(out);
-            WritableSheet sheet = workbook.createSheet("Reporte de Cargos", 0);
-            int fila = 0;
-
-
-            //Cambiamos el formato de fecha:
-            String fechaFtoI = fechaI.replaceAll("/", "");
-            String fechaFtoF = fechaF.replaceAll("/", "");
-
-            //List lobDatos = cargoBO.obtenerCargos(fechaFtoI, fechaFtoF,  parComercio, parTelefono);
-            List lobDatos = null;
-            
-            if ( lobDatos != null )
-            {
-                Label encabezado = new Label(0, fila, "ID_CARGO_SERVICIO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(1, fila, "ARCHIVO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(2, fila, "ID_PAGO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(3, fila, "TELEFONO_ORIGEN");
-                sheet.addCell(encabezado);
-                encabezado = new Label(4, fila, "TELEFONO_DESTINO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(5, fila, "FECHA_CONFERENCIA");
-                sheet.addCell(encabezado);
-                encabezado = new Label(6, fila, "HORA_CONFERENCIA");
-                sheet.addCell(encabezado);
-                encabezado = new Label(7, fila, "DURACION");
-                sheet.addCell(encabezado);
-                encabezado = new Label(8, fila, "TARJETA");
-                sheet.addCell(encabezado);
-                encabezado = new Label(9, fila, "CLAVE_SERVICIO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(10, fila, "IMP_RMOT");
-                sheet.addCell(encabezado);
-                encabezado = new Label(11, fila, "IMP_IEPS");
-                sheet.addCell(encabezado);
-                encabezado = new Label(12, fila, "IMP_IVA");
-                sheet.addCell(encabezado);
-                encabezado = new Label(13, fila, "IMP_TOTAL");
-                sheet.addCell(encabezado);
-                encabezado = new Label(14, fila, "IMP_VALIDACION");
-                sheet.addCell(encabezado);
-                encabezado = new Label(15, fila, "IMP_COBRO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(16, fila, "ESTADO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(17, fila, "FECHA_ESTADO");
-                sheet.addCell(encabezado);
-                encabezado = new Label(18, fila, "REF_BANCARIA");
-                sheet.addCell(encabezado);
-
-                Iterator it = null;
-
-                DateFormat customDateFormat = new DateFormat("dd MMM yyyy hh:mm:ss");
-                WritableCellFormat dateFormat = new WritableCellFormat(customDateFormat);
-
-                /*
-                com.blitz.pagoenlinea.ws.CargoDTO pago;
-                it = lobDatos.iterator();
-                fila++;
-                while (it.hasNext()) {
-
-                    pago = (com.blitz.pagoenlinea.ws.CargoDTO) it.next();
-                    Label accion = new Label(0, fila, String.valueOf(pago.getIdCargoServicio()));
-                    sheet.addCell(accion);
-                    accion = new Label(1, fila, pago.getArchivoCargo());
-                    sheet.addCell(accion);
-                    accion = new Label(2, fila, pago.getIdPago());
-                    sheet.addCell(accion);
-                    accion = new Label(3, fila, pago.getTelefonoOrigen());
-                    sheet.addCell(accion);
-                    accion = new Label(4, fila, pago.getTelefonoDestino());
-                    sheet.addCell(accion);
-                    //DateTime fecha = new DateTime(5, fila, pedido.getFechaPedido(), dateFormat);
-                    //sheet.addCell(fecha);
-                    accion = new Label(5, fila, pago.getFechaConf());
-                    sheet.addCell(accion);
-
-
-                    accion = new Label(6, fila, pago.getHoraConf());
-                    sheet.addCell(accion);
-                    accion = new Label(7, fila, String.valueOf(pago.getDuracion()));
-                    sheet.addCell(accion);
-                    accion = new Label(8, fila, pago.getTarjeta());
-                    sheet.addCell(accion);
-                    accion = new Label(9, fila, pago.getClaveServicio());
-                    sheet.addCell(accion);
-                    accion = new Label(10, fila, String.valueOf(pago.getImporteRMOT()));
-                    sheet.addCell(accion);
-                    accion = new Label(11, fila, String.valueOf(pago.getImporteIEPS()));
-                    sheet.addCell(accion);
-
-                    accion = new Label(12, fila, String.valueOf(pago.getImporteIVA()));
-                    sheet.addCell(accion);
-                    accion = new Label(13, fila, String.valueOf(pago.getImporteTotal()));
-                    sheet.addCell(accion);
-                    accion = new Label(14, fila, String.valueOf(pago.getImporteValidacion()));
-                    sheet.addCell(accion);
-                    accion = new Label(15, fila, String.valueOf(pago.getImporteCobro()));
-                    sheet.addCell(accion);
-                    accion = new Label(16, fila, pago.getEstado());
-                    sheet.addCell(accion);
-                    accion = new Label(17, fila, pago.getFechaEstado());
-                    sheet.addCell(accion);
-                    accion = new Label(18, fila, pago.getReferenciaBancaria());
-                    sheet.addCell(accion);
-
-                    fila++;
-
-                }
-                */
-                
-                fila++;
-            }
-
-
-            workbook.write();
-            workbook.close();
-            out.flush();
-
-
-
-        } catch (Exception ex) {
-            System.out.println(ex)
-            ; //logger.equals("generarExcel: " + ex);
-        }
-        finally {
-            if (out != null)
-                try {
-                out.close();
-                }catch(Exception e) { ; }
-
-        }
-        fc.responseComplete();
-
-    }
-
-    public String muestraPagosPendientesPISA()
-    {
-        mostrarVistaMKT = false;
-
-        if( parComercio == null || parComercio.length() == 0 )
-        {
-            mostrarPagos = false;
-            mostrarErrorPagos = true;
-            msgError = "SELECCIONE UN COMERCIO";
-            return null;
-
-        }
-
-
-        try
-        {
-            filtros = this.obtenerRotuloFiltros();
-
-
-            pagos = pagoBO.obtenerPagosPendientesPISA(fechaI, parComercio);
-
-            if( pagos != null && pagos.size() > 0 )
-            {
-                //totalesFiltro = pagoBO.obtenerTotalesPagosCaja(fechaI, parComercio, parEstatus);
-                mostrarPagos = true;
-                mostrarErrorPagos = false;
-                setMsgError(null);
-                dataScrollerList = new DataScrollerList(pagos);
-            }
-            else
-            {
-                mostrarPagos = false;
-                mostrarErrorPagos = true;
-                setMsgError("NO EXISTEN PAGOS CON LOS DATOS DE BUSQUEDA SELECCIONADOS");
-            }
-
-        }
-        catch(Exception e)
-        {
-            return null;
-        }
-
-        return null;
-
-    }
-
-    public String reenviarReporte()
-    {
-        mostrarVistaMKT = false;
-
-        if( parComercio == null || parComercio.length() == 0 )
-        {
-            mostrarPagos = false;
-            mostrarErrorPagos = true;
-            msgError = "SELECCIONE UN COMERCIO";
-            return null;
-
-        }
-        if( getParCorreo() == null || getParCorreo().length() == 0 )
-        {
-            mostrarPagos = false;
-            mostrarErrorPagos = true;
-            msgError = "PROPORCIONE UNA DIRECCION DE CORREO VALIDA";
-            return null;
-
-        }
-        if( fechaI == null || fechaI.length() == 0 )
-        {
-            mostrarPagos = false;
-            mostrarErrorPagos = true;
-            msgError = "SELECCIONE UNA FECHA";
-            return null;
-
-        }
-
-
-        try
-        {
-            envioReportesBO.enviaRepPagosAPTOndemand("'"+fechaI+"'", parComercio, getParCorreo(),0);
-        }
-        catch(Exception e)
-        {
-            return null;
-        }
-
-        return null;
-
-    }
-
-
-    /**
-     * @return the dataScrollerList
-     */
     public DataScrollerList getDataScrollerList() {
         return dataScrollerList;
     }
 
-    /**
-     * @param dataScrollerList the dataScrollerList to set
-     */
     public void setDataScrollerList(DataScrollerList dataScrollerList) {
         this.dataScrollerList = dataScrollerList;
     }
 
-    /**
-     * @return the parSucursal
-     */
     public String getParSucursal() {
         return parSucursal;
     }
 
-    /**
-     * @param parSucursal the parSucursal to set
-     */
     public void setParSucursal(String parSucursal) {
         this.parSucursal = parSucursal;
     }
 
-    /**
-     * @return the parComercio
-     */
     public String getParComercio() {
         return parComercio;
     }
 
-    /**
-     * @param parComercio the parComercio to set
-     */
     public void setParComercio(String parComercio) {
         this.parComercio = parComercio;
     }
 
-    /**
-     * @return the parTelefono
-     */
     public String getParTelefono() {
         return parTelefono;
     }
 
-    /**
-     * @param parTelefono the parTelefono to set
-     */
     public void setParTelefono(String parTelefono) {
         this.parTelefono = parTelefono;
     }
 
-    /**
-     * @return the fechaI
-     */
     public String getFechaI() {
         return fechaI;
     }
 
-    /**
-     * @param fechaI the fechaI to set
-     */
     public void setFechaI(String fechaI) {
         this.fechaI = fechaI;
     }
 
-    /**
-     * @return the fechaF
-     */
     public String getFechaF() {
         return fechaF;
     }
 
-    /**
-     * @param fechaF the fechaF to set
-     */
     public void setFechaF(String fechaF) {
         this.fechaF = fechaF;
     }
 
-    /**
-     * @return the msgError
-     */
     public String getMsgError() {
         return msgError;
     }
 
-    /**
-     * @param msgError the msgError to set
-     */
     public void setMsgError(String msgError) {
         this.msgError = msgError;
     }
 
-    /**
-     * @return the mostrarPagos
-     */
     public boolean isMostrarPagos() {
         return mostrarPagos;
     }
 
-    /**
-     * @param mostrarPagos the mostrarPagos to set
-     */
     public void setMostrarPagos(boolean mostrarPagos) {
         this.mostrarPagos = mostrarPagos;
     }
 
-    /**
-     * @return the mostrarErrorPagos
-     */
     public boolean isMostrarErrorPagos() {
         return mostrarErrorPagos;
     }
 
-    /**
-     * @param mostrarErrorPagos the mostrarErrorPagos to set
-     */
     public void setMostrarErrorPagos(boolean mostrarErrorPagos) {
         this.mostrarErrorPagos = mostrarErrorPagos;
     }
 
-    /**
-     * @return the comercios
-     */
     public Map getComercios() {
         return comercios;
     }
 
-    /**
-     * @param comercios the comercios to set
-     */
     public void setComercios(Map comercios) {
         this.comercios = comercios;
     }
 
-    /**
-     * @return the pagos
-     */
     public List getPagos() {
         return pagos;
     }
 
-    /**
-     * @param pagos the pagos to set
-     */
     public void setPagos(List pagos) {
         this.pagos = pagos;
     }
 
-    /**
-     * @param pagoBO the pagoBO to set
-     */
     public void setPagoBO(PagoBO pagoBO) {
         this.pagoBO = pagoBO;
     }
 
-    /**
-     * @return the pagosTel
-     */
     public List getPagosTel() {
         return pagosTel;
     }
 
-    /**
-     * @param pagosTel the pagosTel to set
-     */
     public void setPagosTel(List pagosTel) {
         this.pagosTel = pagosTel;
     }
 
-    /**
-     * @return the mostrarPagosTel
-     */
     public boolean isMostrarPagosTel() {
         return mostrarPagosTel;
     }
 
-    /**
-     * @param mostrarPagosTel the mostrarPagosTel to set
-     */
     public void setMostrarPagosTel(boolean mostrarPagosTel) {
         this.mostrarPagosTel = mostrarPagosTel;
     }
 
-    /**
-     * @return the mostrarErrorPagosTel
-     */
     public boolean isMostrarErrorPagosTel() {
         return mostrarErrorPagosTel;
     }
 
-    /**
-     * @param mostrarErrorPagosTel the mostrarErrorPagosTel to set
-     */
     public void setMostrarErrorPagosTel(boolean mostrarErrorPagosTel) {
         this.mostrarErrorPagosTel = mostrarErrorPagosTel;
     }
 
-    /**
-     * @return the consTel
-     */
     public List getConsTel() {
         return consTel;
     }
 
-    /**
-     * @param consTel the consTel to set
-     */
     public void setConsTel(List consTel) {
         this.consTel = consTel;
     }
 
-    /**
-     * @return the mostrarConsTel
-     */
     public boolean isMostrarConsTel() {
         return mostrarConsTel;
     }
 
-    /**
-     * @param mostrarConsTel the mostrarConsTel to set
-     */
     public void setMostrarConsTel(boolean mostrarConsTel) {
         this.mostrarConsTel = mostrarConsTel;
     }
 
-    /**
-     * @return the mostrarErrorConsTel
-     */
     public boolean isMostrarErrorConsTel() {
         return mostrarErrorConsTel;
     }
 
-    /**
-     * @param mostrarErrorConsTel the mostrarErrorConsTel to set
-     */
     public void setMostrarErrorConsTel(boolean mostrarErrorConsTel) {
         this.mostrarErrorConsTel = mostrarErrorConsTel;
     }
 
-    /**
-     * @return the dataScrollerList2
-     */
-    public DataScrollerList getDataScrollerList2() {
-        return dataScrollerList2;
-    }
-
-    /**
-     * @param dataScrollerList2 the dataScrollerList2 to set
-     */
-    public void setDataScrollerList2(DataScrollerList dataScrollerList2) {
-        this.dataScrollerList2 = dataScrollerList2;
-    }
-
-    /**
-     * @return the msgErrorConsTel
-     */
     public String getMsgErrorConsTel() {
         return msgErrorConsTel;
     }
 
-    /**
-     * @param msgErrorConsTel the msgErrorConsTel to set
-     */
     public void setMsgErrorConsTel(String msgErrorConsTel) {
         this.msgErrorConsTel = msgErrorConsTel;
     }
 
-    /**
-     * @param consultaBO the consultaBO to set
-     */
     public void setConsultaBO(ConsultaBO consultaBO) {
         this.consultaBO = consultaBO;
     }
 
-    /**
-     * @param sucursalBO the sucursalBO to set
-     */
     public void setSucursalBO(SucursalBO sucursalBO) {
         this.sucursalBO = sucursalBO;
     }
 
-    /**
-     * @return the adquiriente
-     */
     public String getAdquiriente() {
         return adquiriente;
     }
 
-    /**
-     * @param adquiriente the adquiriente to set
-     */
     public void setAdquiriente(String adquiriente) {
         this.adquiriente = adquiriente;
     }
 
-    /**
-     * @return the fechaArchivo
-     */
     public String getFechaArchivoPisa() {
         return fechaArchivoPisa;
     }
 
-    /**
-     * @param fechaArchivo the fechaArchivo to set
-     */
     public void setFechaArchivoPisa(String fechaArchivoPisa) {
         this.fechaArchivoPisa = fechaArchivoPisa;
     }
 
-    /**
-     * @return the fechaArchivoTercero
-     */
     public String getFechaArchivoTercero() {
         return fechaArchivoTercero;
     }
 
-    /**
-     * @param fechaArchivoTercero the fechaArchivoTercero to set
-     */
     public void setFechaArchivoTercero(String fechaArchivoTercero) {
         this.fechaArchivoTercero = fechaArchivoTercero;
     }
 
-    /**
-     * @return the estatusPagoMap
-     */
     public Map getEstatusPagoMap() {
         return estatusPagoMap;
     }
 
-    /**
-     * @param estatusPagoMap the estatusPagoMap to set
-     */
     public void setEstatusPagoMap(Map estatusPagoMap) {
         this.estatusPagoMap = estatusPagoMap;
     }
 
-    /**
-     * @return the parAutorizacion
-     */
     public String getParAutorizacion() {
         return parAutorizacion;
     }
 
-    /**
-     * @param parAutorizacion the parAutorizacion to set
-     */
     public void setParAutorizacion(String parAutorizacion) {
         this.parAutorizacion = parAutorizacion;
     }
 
-    /**
-     * @return the parEstatus
-     */
     public String getParEstatus() {
         return parEstatus;
     }
 
-    /**
-     * @param parEstatus the parEstatus to set
-     */
     public void setParEstatus(String parEstatus) {
         this.parEstatus = parEstatus;
     }
 
-    /**
-     * @return the parTransaccion
-     */
     public String getParTransaccion() {
         return parTransaccion;
     }
 
-    /**
-     * @param parTransaccion the parTransaccion to set
-     */
     public void setParTransaccion(String parTransaccion) {
         this.parTransaccion = parTransaccion;
     }
 
-    /**
-     * @return the totalesFiltro
-     */
     public PagoDTO getTotalesFiltro() {
         return totalesFiltro;
     }
 
-    /**
-     * @param totalesFiltro the totalesFiltro to set
-     */
     public void setTotalesFiltro(PagoDTO totalesFiltro) {
         this.totalesFiltro = totalesFiltro;
     }
 
-    /**
-     * @return the filtros
-     */
     public String getFiltros() {
         return filtros;
     }
 
-    /**
-     * @param filtros the filtros to set
-     */
     public void setFiltros(String filtros) {
         this.filtros = filtros;
     }
 
-    /**
-     * @return the mostrarVistaMKT
-     */
     public boolean isMostrarVistaMKT() {
         return mostrarVistaMKT;
     }
 
-    /**
-     * @param mostrarVistaMKT the mostrarVistaMKT to set
-     */
     public void setMostrarVistaMKT(boolean mostrarVistaMKT) {
         this.mostrarVistaMKT = mostrarVistaMKT;
     }
 
-    /**
-     * @return the parIdMtPago
-     */
     public String getParIdMtPago() {
         return parIdMtPago;
     }
 
-    /**
-     * @param parIdMtPago the parIdMtPago to set
-     */
     public void setParIdMtPago(String parIdMtPago) {
         this.parIdMtPago = parIdMtPago;
     }
 
-    /**
-     * @return the parReferenciaBanco
-     */
     public String getParReferenciaBanco() {
         return parReferenciaBanco;
     }
 
-    /**
-     * @param parReferenciaBanco the parReferenciaBanco to set
-     */
     public void setParReferenciaBanco(String parReferenciaBanco) {
         this.parReferenciaBanco = parReferenciaBanco;
     }
 
-    /**
-     * @return the parCS
-     */
     public String getParCS() {
         return parCS;
     }
 
-    /**
-     * @param parCS the parCS to set
-     */
     public void setParCS(String parCS) {
         this.parCS = parCS;
     }
 
-    /**
-     * @return the parLib
-     */
     public String getParLib() {
         return parLib;
     }
 
-    /**
-     * @param parLib the parLib to set
-     */
     public void setParLib(String parLib) {
         this.parLib = parLib;
     }
 
-    /**
-     * @return the csMap
-     */
     public Map getCsMap() {
         return csMap;
     }
 
-    /**
-     * @param csMap the csMap to set
-     */
     public void setCsMap(Map csMap) {
         this.csMap = csMap;
     }
 
-    /**
-     * @return the libreriaMap
-     */
     public Map getLibreriaMap() {
         return libreriaMap;
     }
 
-    /**
-     * @param libreriaMap the libreriaMap to set
-     */
     public void setLibreriaMap(Map libreriaMap) {
         this.libreriaMap = libreriaMap;
     }
 
-    /**
-     * @return the parImporte
-     */
     public String getParImporte() {
         return parImporte;
     }
 
-    /**
-     * @param parImporte the parImporte to set
-     */
     public void setParImporte(String parImporte) {
         this.parImporte = parImporte;
     }
 
-    /**
-     * @return the fechaIO
-     */
     public String getFechaIO() {
         return fechaIO;
     }
 
-    /**
-     * @param fechaIO the fechaIO to set
-     */
     public void setFechaIO(String fechaIO) {
         this.fechaIO = fechaIO;
     }
 
-    /**
-     * @return the fechaFO
-     */
     public String getFechaFO() {
         return fechaFO;
     }
 
-    /**
-     * @param fechaFO the fechaFO to set
-     */
     public void setFechaFO(String fechaFO) {
         this.fechaFO = fechaFO;
     }
 
-    /**
-     * @return the saldo
-     */
     public String getSaldo() {
         return saldo;
     }
 
-    /**
-     * @param saldo the saldo to set
-     */
     public void setSaldo(String saldo) {
         this.saldo = saldo;
     }
 
-    /**
-     * @param cargoBO the cargoBO to set
-     */
-    public void setCargoBO(CargoBO cargoBO) {
-        this.cargoBO = cargoBO;
-    }
-
-    /**
-     * @param envioReportesBO the envioReportesBO to set
-     */
-    public void setEnvioReportesBO(EnvioReportesBO envioReportesBO) {
-        this.envioReportesBO = envioReportesBO;
-    }
-
-    /**
-     * @param parCorreo the parCorreo to set
-     */
     public void setParCorreo(String parCorreo) {
         this.parCorreo = parCorreo;
     }
 
-    /**
-     * @return the parCorreo
-     */
     public String getParCorreo() {
         return parCorreo;
     }
